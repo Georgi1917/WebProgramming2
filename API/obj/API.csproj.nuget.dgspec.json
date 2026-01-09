@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\krasi\\Desktop\\WebProject\\API\\API.csproj": {}
+    "D:\\DotNet\\WebProgramming2\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\krasi\\Desktop\\WebProject\\API\\API.csproj": {
+    "D:\\DotNet\\WebProgramming2\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\krasi\\Desktop\\WebProject\\API\\API.csproj",
+        "projectUniqueName": "D:\\DotNet\\WebProgramming2\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\krasi\\Desktop\\WebProject\\API\\API.csproj",
-        "packagesPath": "C:\\Users\\krasi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\krasi\\Desktop\\WebProject\\API\\obj\\",
+        "projectPath": "D:\\DotNet\\WebProgramming2\\API\\API.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "D:\\DotNet\\WebProgramming2\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\krasi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,15 +22,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\krasi\\Desktop\\WebProject\\Common\\Common.csproj": {
-                "projectPath": "C:\\Users\\krasi\\Desktop\\WebProject\\Common\\Common.csproj"
+              "D:\\DotNet\\WebProgramming2\\Common\\Common.csproj": {
+                "projectPath": "D:\\DotNet\\WebProgramming2\\Common\\Common.csproj"
               }
             }
           }
@@ -78,21 +77,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\krasi\\Desktop\\WebProject\\Common\\Common.csproj": {
+    "D:\\DotNet\\WebProgramming2\\Common\\Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\krasi\\Desktop\\WebProject\\Common\\Common.csproj",
+        "projectUniqueName": "D:\\DotNet\\WebProgramming2\\Common\\Common.csproj",
         "projectName": "Common",
-        "projectPath": "C:\\Users\\krasi\\Desktop\\WebProject\\Common\\Common.csproj",
-        "packagesPath": "C:\\Users\\krasi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\krasi\\Desktop\\WebProject\\Common\\obj\\",
+        "projectPath": "D:\\DotNet\\WebProgramming2\\Common\\Common.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "D:\\DotNet\\WebProgramming2\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\krasi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -100,7 +99,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -139,7 +137,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
