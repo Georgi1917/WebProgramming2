@@ -9,3 +9,15 @@ C:\Users\krasi\Desktop\WebProject\Common\obj\Debug\net8.0\Common.dll
 C:\Users\krasi\Desktop\WebProject\Common\obj\Debug\net8.0\refint\Common.dll
 C:\Users\krasi\Desktop\WebProject\Common\obj\Debug\net8.0\Common.pdb
 C:\Users\krasi\Desktop\WebProject\Common\obj\Debug\net8.0\ref\Common.dll
+D:\DotNet\WebProgramming2\Common\bin\Debug\net8.0\Common.deps.json
+D:\DotNet\WebProgramming2\Common\bin\Debug\net8.0\Common.dll
+D:\DotNet\WebProgramming2\Common\bin\Debug\net8.0\Common.pdb
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.GeneratedMSBuildEditorConfig.editorconfig
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.AssemblyInfoInputs.cache
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.AssemblyInfo.cs
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.csproj.CoreCompileInputs.cache
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.sourcelink.json
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.dll
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\refint\Common.dll
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.pdb
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\ref\Common.dll

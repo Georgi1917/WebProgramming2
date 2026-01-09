@@ -10,7 +10,7 @@ public class UserServices
 
     static List<User> users;
 
-    public UserServices()
+    static UserServices()
     {
         
         users = new List<User>()
@@ -43,15 +43,30 @@ public class UserServices
     public User GetById(int id)
     {
         
-        User needed = users.FirstOrDefault(u => u.Id == id);
-        return needed;
+        return users.FirstOrDefault(u => u.Id == id);
 
     }
 
     public void Save(User user)
     {
         
-        users.Add(user);
+        if (user.Id > 0)
+        {
+            
+            User forUpdate = users.FirstOrDefault(u => u.Id == user.Id);
+
+            forUpdate.Username = user.Username;
+            forUpdate.Email = user.Email;
+            forUpdate.Password = user.Password;
+
+        }
+        else
+        {
+
+            user.Id = users.Max(u => u.Id) == 0 ? 1 : users.Max(u => u.Id) + 1;
+            users.Add(user);
+
+        }
 
     }
 
