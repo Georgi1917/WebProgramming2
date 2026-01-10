@@ -21,3 +21,4 @@ D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.dll
 D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\refint\Common.dll
 D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.pdb
 D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\ref\Common.dll
+D:\DotNet\WebProgramming2\Common\obj\Debug\net8.0\Common.csproj.AssemblyReference.cache
