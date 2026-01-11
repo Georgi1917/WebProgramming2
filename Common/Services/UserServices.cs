@@ -1,49 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common.Data;
 using Common.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Common.Services;
 
 public class UserServices
 {
 
-    static List<User> users;
+    //static List<User> users;
+    private readonly AppDbContext _context;
+    private DbSet<User> Items;
 
-    static UserServices()
+    public UserServices(AppDbContext context)
     {
         
-        users = new List<User>()
-        {
-            new User
-            {
-                Id = 1,
-                Username = "Pesho",
-                Email = "Pesho@abv.bg",
-                Password = "1234567"
-            },
-            new User
-            {
-                Id = 2,
-                Username = "Gosho",
-                Email = "Gosho@abv.bg",
-                Password = "234567333"
-            }
-        };
+        _context = context;
+        Items = _context.Set<User>();
 
     }
 
     public List<User> GetAll()
     {
         
-        return users;
+        return Items.AsQueryable().ToList();
 
     }
 
     public User GetById(int id)
     {
         
-        return users.FirstOrDefault(u => u.Id == id);
+        return Items.FirstOrDefault(u => u.Id == id);
 
     }
 
@@ -53,18 +42,15 @@ public class UserServices
         if (user.Id > 0)
         {
             
-            User forUpdate = users.FirstOrDefault(u => u.Id == user.Id);
-
-            forUpdate.Username = user.Username;
-            forUpdate.Email = user.Email;
-            forUpdate.Password = user.Password;
+            _context.Users.Update(user);
+            _context.SaveChanges();
 
         }
         else
         {
 
-            user.Id = users.Max(u => u.Id) == 0 ? 1 : users.Max(u => u.Id) + 1;
-            users.Add(user);
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
         }
 
@@ -73,8 +59,9 @@ public class UserServices
     public void Delete(int id)
     {
         
-        User needed = users.FirstOrDefault(u => u.Id == id);
-        if (needed != null) users.Remove(needed);
+        User needed = _context.Users.FirstOrDefault(u => u.Id == id);
+        if (needed != null) _context.Users.Remove(needed);
+        _context.SaveChanges();
 
     }
 

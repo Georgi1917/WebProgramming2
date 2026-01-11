@@ -10,12 +10,20 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         
+        private readonly UserServices _services;
+
+        public UsersController(UserServices services)
+        {
+            
+            _services = services;
+
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
             
-            UserServices services = new UserServices();
-            return Ok(services.GetAll());
+            return Ok(_services.GetAll());
 
         }
 
@@ -24,8 +32,7 @@ namespace API.Controllers
         public IActionResult Get(int id)
         {
             
-            UserServices services = new UserServices();
-            User user = services.GetById(id);
+            User user = _services.GetById(id);
             return Ok(user);
 
         }
@@ -33,8 +40,7 @@ namespace API.Controllers
         public IActionResult Post([FromBody] User user)
         {
             
-            UserServices services = new UserServices();
-            services.Save(user);
+            _services.Save(user);
             return Ok(user);
 
         }
@@ -44,14 +50,13 @@ namespace API.Controllers
         public IActionResult Put(int id, [FromBody] User user)
         {
             
-            UserServices services = new UserServices();
-            User forUpdate = services.GetById(id);
+            User forUpdate = _services.GetById(id);
 
             forUpdate.Username = user.Username;
             forUpdate.Email    = user.Email;
             forUpdate.Password = user.Password;
 
-            services.Save(forUpdate);
+            _services.Save(forUpdate);
 
             return Ok(forUpdate);
 
@@ -62,9 +67,8 @@ namespace API.Controllers
         public IActionResult Delete(int id)
         {
 
-            UserServices services = new UserServices();
-            User forDelete = services.GetById(id);
-            services.Delete(id);
+            User forDelete = _services.GetById(id);
+            _services.Delete(id);
 
             return Ok(forDelete);
 
