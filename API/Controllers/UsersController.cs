@@ -19,7 +19,8 @@ namespace API.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         public IActionResult Get(int id)
         {
             
@@ -28,5 +29,46 @@ namespace API.Controllers
             return Ok(user);
 
         }
+        [HttpPost]
+        public IActionResult Post([FromBody] User user)
+        {
+            
+            UserServices services = new UserServices();
+            services.Save(user);
+            return Ok(user);
+
+        }
+
+        [HttpPost]
+        [Route("{id}")]
+        public IActionResult Put(int id, [FromBody] User user)
+        {
+            
+            UserServices services = new UserServices();
+            User forUpdate = services.GetById(id);
+
+            forUpdate.Username = user.Username;
+            forUpdate.Email    = user.Email;
+            forUpdate.Password = user.Password;
+
+            services.Save(forUpdate);
+
+            return Ok(forUpdate);
+
+        }
+
+        [HttpPost]
+        [Route("delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+
+            UserServices services = new UserServices();
+            User forDelete = services.GetById(id);
+            services.Delete(id);
+
+            return Ok(forDelete);
+
+        }
+        
     }
 }
