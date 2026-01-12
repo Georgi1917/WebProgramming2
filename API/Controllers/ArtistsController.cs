@@ -1,18 +1,18 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Common.Entities;
 using Common.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class ArtistsController : ControllerBase
     {
         
-        private readonly UserServices _services;
+        private readonly ArtistServices _services;
 
-        public UsersController(UserServices services)
+        public ArtistsController(ArtistServices services)
         {
             
             _services = services;
@@ -32,27 +32,29 @@ namespace API.Controllers
         public IActionResult Get(int id)
         {
             
-            User user = _services.GetById(id);
-            return Ok(user);
+            Artist item = _services.GetById(id);
+            return Ok(item);
 
         }
         [HttpPost]
-        public IActionResult Post([FromBody] User user)
+        public IActionResult Post([FromBody] Artist item)
         {
             
-            _services.Save(user);
-            return Ok(user);
+            _services.Save(item);
+            return Ok(item);
 
         }
 
         [HttpPost]
         [Route("{id}")]
-        public IActionResult Put(int id, [FromBody] User user)
+        public IActionResult Put(int id, [FromBody] Artist item)
         {
             
-            _services.Update(id, user);
+            bool updated = _services.Update(id, item);
 
-            return Ok(user);
+            if (!updated) return NotFound();
+
+            return Ok(item);
 
         }
 
@@ -61,12 +63,12 @@ namespace API.Controllers
         public IActionResult Delete(int id)
         {
 
-            User forDelete = _services.GetById(id);
+            Artist forDelete = _services.GetById(id);
             _services.Delete(id);
 
             return Ok(forDelete);
 
         }
-        
+
     }
 }

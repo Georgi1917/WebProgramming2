@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Common.Data;
 using Common.Entities;
 
 namespace Common.Services;
@@ -7,15 +9,72 @@ namespace Common.Services;
 public class ArtistServices
 {
 
-    public static List<Artist> items;
+    private readonly AppDbContext _context;
 
-    static ArtistServices()
+    public ArtistServices(AppDbContext context)
     {
         
-        items = new List<Artist>();
+        _context = context;
 
     }
 
-    
+    public List<Artist> GetAll()
+    {
+        
+        return _context.Artists.AsQueryable().ToList();
+
+    }
+
+    public Artist GetById(int id)
+    {
+        
+        return _context.Artists.FirstOrDefault(i => i.Id == id);
+
+    }
+
+    public void Save(Artist item)
+    {
+        
+        if (item.Id > 0)
+        {
+            
+            _context.Artists.Update(item);
+            _context.SaveChanges();
+
+        }
+        else
+        {
+
+            _context.Artists.Add(item);
+            _context.SaveChanges();
+
+        }
+
+    }
+
+    public bool Update(int id, Artist item)
+    {
+        
+        Artist forUpdate = _context.Artists.Find(id);
+
+        if (forUpdate == null) return false;
+
+        forUpdate.Name    = item.Name;
+        forUpdate.Country = item.Country;
+
+        _context.SaveChanges();
+
+        return true;
+
+    }
+
+    public void Delete(int id)
+    {
+        
+        Artist needed = _context.Artists.FirstOrDefault(i => i.Id == id);
+        if (needed != null) _context.Artists.Remove(needed);
+        _context.SaveChanges();
+
+    }    
 
 }

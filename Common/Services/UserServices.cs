@@ -10,49 +10,51 @@ namespace Common.Services;
 public class UserServices
 {
 
-    //static List<User> users;
     private readonly AppDbContext _context;
-    private DbSet<User> Items;
 
     public UserServices(AppDbContext context)
     {
         
         _context = context;
-        Items = _context.Set<User>();
 
     }
 
     public List<User> GetAll()
     {
         
-        return Items.AsQueryable().ToList();
+        return _context.Users.AsQueryable().ToList();
 
     }
 
     public User GetById(int id)
     {
         
-        return Items.FirstOrDefault(u => u.Id == id);
+        return _context.Users.FirstOrDefault(u => u.Id == id);
 
     }
 
     public void Save(User user)
     {
+
+        _context.Users.Add(user);
+        _context.SaveChanges();
+
+    }
+
+    public bool Update(int id, User item)
+    {
         
-        if (user.Id > 0)
-        {
-            
-            _context.Users.Update(user);
-            _context.SaveChanges();
+        User forUpdate = _context.Users.Find(id);
 
-        }
-        else
-        {
+        if (forUpdate == null) return false;
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+        forUpdate.Username = item.Username;
+        forUpdate.Email    = item.Email;
+        forUpdate.Password = item.Password;
 
-        }
+        _context.SaveChanges();
+
+        return true;
 
     }
 

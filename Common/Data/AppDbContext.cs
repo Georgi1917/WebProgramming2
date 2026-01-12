@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
 {
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Artist> Artists { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {}
@@ -22,6 +23,12 @@ public class AppDbContext : DbContext
 
         #endregion
 
+        #region Artist
+
+        modelBuilder.Entity<Artist>()
+            .HasKey(u => u.Id);
+
+        #endregion
 
     }
 
