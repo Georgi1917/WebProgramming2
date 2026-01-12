@@ -23,6 +23,19 @@ public class AppDbContext : DbContext
 
         #endregion
 
+        #region Playlist
+
+        modelBuilder.Entity<Playlist>()
+            .HasKey(e => e.Id);
+            
+        modelBuilder.Entity<Playlist>()
+            .HasOne(e => e.User)
+            .WithMany(u => u.Playlists)
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        #endregion
+
         #region Artist
 
         modelBuilder.Entity<Artist>()
