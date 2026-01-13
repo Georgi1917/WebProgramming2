@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Common.Data;
 using Common.Entities;
+using Common.Infrastructure.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Services;
@@ -12,6 +15,15 @@ public class UserServices
 
     private readonly AppDbContext _context;
 
+    private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
+    {
+        
+        var hmac = new HMACSHA512();
+        salt = hmac.Key;
+        hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+    }
+
     public UserServices(AppDbContext context)
     {
         
@@ -19,29 +31,52 @@ public class UserServices
 
     }
 
-    public List<User> GetAll()
+    public List<UserReadDto> GetAll()
     {
         
-        return _context.Users.AsQueryable().ToList();
+        return _context.Users
+                        .AsQueryable()
+                        .Select(u => new UserReadDto
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Email = u.Email
+                        }).ToList();
 
     }
 
-    public User GetById(int id)
+    public UserReadDto GetById(int id)
     {
         
-        return _context.Users.FirstOrDefault(u => u.Id == id);
+        return _context.Users
+                        .Select(u => new UserReadDto
+                        {
+                            Id = u.Id,
+                            Username = u.Username,
+                            Email = u.Email
+                        }).FirstOrDefault(u => u.Id == id);
 
     }
 
-    public void Save(User user)
+    public void Save(UserCreateDto dto)
     {
+
+        CreatePasswordHash(dto.Password, out var hash, out var salt);
+
+        User user = new User
+        {
+            Username = dto.Username,
+            Email = dto.Email,
+            PasswordHash = hash,
+            PasswordSalt = salt
+        };
 
         _context.Users.Add(user);
         _context.SaveChanges();
 
     }
 
-    public bool Update(int id, User item)
+    public bool Update(int id, UserUpdateDto item)
     {
         
         User forUpdate = _context.Users.Find(id);
@@ -50,7 +85,6 @@ public class UserServices
 
         forUpdate.Username = item.Username;
         forUpdate.Email    = item.Email;
-        forUpdate.Password = item.Password;
 
         _context.SaveChanges();
 

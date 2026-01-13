@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Entities;
 using Common.Services;
+using Common.Infrastructure.User;
 
 namespace API.Controllers
 {
@@ -32,12 +33,12 @@ namespace API.Controllers
         public IActionResult Get(int id)
         {
             
-            User user = _services.GetById(id);
+            UserReadDto user = _services.GetById(id);
             return Ok(user);
 
         }
         [HttpPost]
-        public IActionResult Post([FromBody] User user)
+        public IActionResult Post([FromBody] UserCreateDto user)
         {
             
             _services.Save(user);
@@ -47,7 +48,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("{id}")]
-        public IActionResult Put(int id, [FromBody] User user)
+        public IActionResult Put(int id, [FromBody] UserUpdateDto user)
         {
             
             _services.Update(id, user);
@@ -61,7 +62,7 @@ namespace API.Controllers
         public IActionResult Delete(int id)
         {
 
-            User forDelete = _services.GetById(id);
+            UserReadDto forDelete = _services.GetById(id);
             _services.Delete(id);
 
             return Ok(forDelete);

@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Entities\" />
+    <Folder Include="Infrastructure\Artist\" />
+    <Folder Include="Infrastructure\Playlist\" />
     <Folder Include="Migrations\" />
     <Folder Include="Services\" />
   </ItemGroup>
