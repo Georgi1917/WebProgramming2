@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<UserServices>();
 builder.Services.AddScoped<ArtistServices>();
+builder.Services.AddScoped<PlaylistServices>();
 
 var app = builder.Build();
 
