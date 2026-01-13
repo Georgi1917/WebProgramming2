@@ -34,21 +34,9 @@ public class ArtistServices
 
     public void Save(Artist item)
     {
-        
-        if (item.Id > 0)
-        {
-            
-            _context.Artists.Update(item);
-            _context.SaveChanges();
-
-        }
-        else
-        {
-
-            _context.Artists.Add(item);
-            _context.SaveChanges();
-
-        }
+    
+        _context.Artists.Add(item);
+        _context.SaveChanges();
 
     }
 
