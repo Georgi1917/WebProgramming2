@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Common.Entities;
 
-namespace Common.Infrastructure.User;
+namespace Common.Infrastructure.UserDTOs;
 
 public class UserReadDto
 {

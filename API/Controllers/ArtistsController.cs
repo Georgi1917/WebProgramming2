@@ -1,4 +1,5 @@
 using Common.Entities;
+using Common.Infrastructure.ArtistDTOs;
 using Common.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,12 +33,12 @@ namespace API.Controllers
         public IActionResult Get(int id)
         {
             
-            Artist item = _services.GetById(id);
+            ArtistReadDto item = _services.GetById(id);
             return Ok(item);
 
         }
         [HttpPost]
-        public IActionResult Post([FromBody] Artist item)
+        public IActionResult Post([FromBody] ArtistCreateDto item)
         {
             
             _services.Save(item);
@@ -47,7 +48,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("{id}")]
-        public IActionResult Put(int id, [FromBody] Artist item)
+        public IActionResult Put(int id, [FromBody] ArtistCreateDto item)
         {
             
             bool updated = _services.Update(id, item);
@@ -63,7 +64,7 @@ namespace API.Controllers
         public IActionResult Delete(int id)
         {
 
-            Artist forDelete = _services.GetById(id);
+            ArtistReadDto forDelete = _services.GetById(id);
             _services.Delete(id);
 
             return Ok(forDelete);

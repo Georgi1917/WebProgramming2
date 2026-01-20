@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Data;
 using Common.Entities;
+using Common.Infrastructure.PlaylistDTOs;
 
 namespace Common.Services;
 
@@ -16,36 +17,54 @@ public class PlaylistServices
         _context = context;
     }
 
-    public List<Playlist> Get(int userId)
+    public List<PlaylistReadDto> Get(int userId)
     {
-        return _context.Playlists.Where(u => u.UserId == userId).ToList();
+        return _context.Playlists
+                        .Where(u => u.UserId == userId)
+                        .Select(p => new PlaylistReadDto
+                        {
+                            Id = p.Id,
+                            Title = p.Title
+                        })
+                        .ToList();
     }
 
-    public Playlist GetById(int userId, int playlistId)
+    public PlaylistReadDto GetById(int userId, int playlistId)
     {
         
-        return _context.Playlists.FirstOrDefault(p => (p.Id == playlistId && p.UserId == userId));
+        Playlist p = _context.Playlists.FirstOrDefault(p => (p.Id == playlistId && p.UserId == userId));
+
+        return new PlaylistReadDto
+        {
+            Id = p.Id,
+            Title = p.Title
+        };
 
     }
 
-    public void Save(int userId, Playlist playlist)
+    public void Save(int userId, PlaylistCreateDto playlist)
     {
         
         User needed = _context.Users.FirstOrDefault(u => u.Id == userId);
 
         if (needed != null)
         {
-            
-            playlist.User = needed;
-            playlist.UserId = userId;
-            _context.Playlists.Add(playlist);
+
+            Playlist p = new Playlist
+            {
+                Title = playlist.Title,
+                User = needed,
+                UserId = userId
+            };
+
+            _context.Playlists.Add(p);
             _context.SaveChanges();
 
         }
 
     }
 
-    public bool Update(int userId, int playlistId, Playlist playlist)
+    public bool Update(int userId, int playlistId, PlaylistCreateDto playlist)
     {
         
         Playlist forUpdate = _context.Playlists

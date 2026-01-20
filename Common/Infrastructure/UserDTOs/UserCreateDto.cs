@@ -1,6 +1,6 @@
 using System;
 
-namespace Common.Infrastructure.User;
+namespace Common.Infrastructure.UserDTOs;
 
 public class UserCreateDto
 {

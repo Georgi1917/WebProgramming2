@@ -1,4 +1,5 @@
 using Common.Entities;
+using Common.Infrastructure.PlaylistDTOs;
 using Common.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(int userId, [FromBody]Playlist playlist)
+        public IActionResult Post(int userId, [FromBody]PlaylistCreateDto playlist)
         {
             
             _service.Save(userId, playlist);
@@ -48,7 +49,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("{playlistId}")]
-        public IActionResult Put(int userId, int playlistId, [FromBody]Playlist playlist)
+        public IActionResult Put(int userId, int playlistId, [FromBody]PlaylistCreateDto playlist)
         {
             
             _service.Update(userId, playlistId, playlist);
@@ -61,7 +62,7 @@ namespace API.Controllers
         public IActionResult Delete(int userId, int playlistId)
         {
             
-            Playlist forDelete = _service.GetById(userId, playlistId);
+            PlaylistReadDto forDelete = _service.GetById(userId, playlistId);
             _service.Delete(userId, playlistId);
             return Ok(forDelete);
 

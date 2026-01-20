@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Common.Data;
 using Common.Entities;
-using Common.Infrastructure.User;
+using Common.Infrastructure.UserDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Services;

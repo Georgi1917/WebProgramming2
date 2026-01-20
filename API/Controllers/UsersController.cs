@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Entities;
 using Common.Services;
-using Common.Infrastructure.User;
+using Common.Infrastructure.UserDTOs;
 
 namespace API.Controllers
 {

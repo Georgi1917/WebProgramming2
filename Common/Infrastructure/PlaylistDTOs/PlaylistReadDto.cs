@@ -1,6 +1,6 @@
 using System;
 
-namespace Common.Infrastructure.Playlist;
+namespace Common.Infrastructure.PlaylistDTOs;
 
 public class PlaylistReadDto
 {

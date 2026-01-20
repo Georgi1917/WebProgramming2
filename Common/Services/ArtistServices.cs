@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Data;
 using Common.Entities;
+using Common.Infrastructure.ArtistDTOs;
 
 namespace Common.Services;
 
@@ -18,29 +19,49 @@ public class ArtistServices
 
     }
 
-    public List<Artist> GetAll()
+    public List<ArtistReadDto> GetAll()
     {
         
-        return _context.Artists.AsQueryable().ToList();
+        return _context.Artists
+                        .AsQueryable()
+                        .Select(a => new ArtistReadDto
+                        {
+                            Id = a.Id,
+                            Name = a.Name,
+                            Country = a.Country
+                        })
+                        .ToList();
 
     }
 
-    public Artist GetById(int id)
+    public ArtistReadDto GetById(int id)
     {
         
-        return _context.Artists.FirstOrDefault(i => i.Id == id);
+        Artist a = _context.Artists.FirstOrDefault(i => i.Id == id);
+        return new ArtistReadDto
+        {
+            Id = a.Id,
+            Name = a.Name,
+            Country = a.Country
+        };
 
     }
 
-    public void Save(Artist item)
+    public void Save(ArtistCreateDto item)
     {
     
-        _context.Artists.Add(item);
+        Artist a = new Artist
+        {
+            Name = item.Name,
+            Country = item.Country
+        };
+
+        _context.Artists.Add(a);
         _context.SaveChanges();
 
     }
 
-    public bool Update(int id, Artist item)
+    public bool Update(int id, ArtistCreateDto item)
     {
         
         Artist forUpdate = _context.Artists.Find(id);
