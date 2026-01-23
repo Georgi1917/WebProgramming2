@@ -47,7 +47,7 @@ namespace API.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("{playlistId}")]
         public IActionResult Put(int userId, int playlistId, [FromBody]PlaylistCreateDto playlist)
         {
@@ -57,8 +57,8 @@ namespace API.Controllers
 
         }
 
-        [HttpPost]
-        [Route("delete/{playlistId}")]
+        [HttpDelete]
+        [Route("{playlistId}")]
         public IActionResult Delete(int userId, int playlistId)
         {
             

@@ -18,7 +18,8 @@ public class UserServices
     private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
     {
         
-        var hmac = new HMACSHA512();
+        using var hmac = new HMACSHA512();
+
         salt = hmac.Key;
         hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
 
@@ -55,6 +56,13 @@ public class UserServices
                             Username = u.Username,
                             Email = u.Email
                         }).FirstOrDefault(u => u.Id == id);
+
+    }
+
+    public User GetByUsername(string username)
+    {
+        
+        return _context.Users.FirstOrDefault(u => u.Username == username);
 
     }
 

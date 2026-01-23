@@ -31,11 +31,11 @@ function ArtistForm({ initialData, onSubmit, onCancel, isEditing }) {
         </div>
 
         <div className="form-group">
-          <label>Genre</label>
+          <label>Country</label>
           <input
             type="text"
-            name="genre"
-            value={formData.genre}
+            name="country"
+            value={formData.country}
             onChange={handleChange}
           />
         </div>

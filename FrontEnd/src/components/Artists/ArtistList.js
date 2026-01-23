@@ -13,7 +13,7 @@ function ArtistList({ artists, onEdit, onDelete }) {
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Genre</th>
+            <th>Country</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -22,7 +22,7 @@ function ArtistList({ artists, onEdit, onDelete }) {
             <tr key={artist.id}>
               <td>{artist.id}</td>
               <td>{artist.name}</td>
-              <td>{artist.genre || 'N/A'}</td>
+              <td>{artist.country || 'N/A'}</td>
               <td>
                 <button onClick={() => onEdit(artist)} className="btn-edit">Edit</button>
                 <button onClick={() => onDelete(artist.id)} className="btn-delete">Delete</button>

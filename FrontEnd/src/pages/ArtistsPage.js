@@ -28,13 +28,13 @@ function ArtistsPage() {
 
   const handleAdd = () => {
     setEditingId(null);
-    setFormData({ name: '', genre: '' });
+    setFormData({ name: '', country: '' });
     setShowForm(true);
   };
 
   const handleEdit = (artist) => {
     setEditingId(artist.id);
-    setFormData({ name: artist.name, genre: artist.genre });
+    setFormData({ name: artist.name, country: artist.country });
     setShowForm(true);
   };
 

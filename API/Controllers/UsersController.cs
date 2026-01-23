@@ -46,7 +46,7 @@ namespace API.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("{id}")]
         public IActionResult Put(int id, [FromBody] UserUpdateDto user)
         {
@@ -57,8 +57,8 @@ namespace API.Controllers
 
         }
 
-        [HttpPost]
-        [Route("delete/{id}")]
+        [HttpDelete]
+        [Route("{id}")]
         public IActionResult Delete(int id)
         {
 
