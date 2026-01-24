@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import PlaylistList from '../components/Playlists/PlaylistList';
 import PlaylistForm from '../components/Playlists/PlaylistForm';
 import playlistService from '../services/playlistService';
 import './CrudPage.css';
 
 function PlaylistsPage() {
+  const { requireLogin } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -27,18 +29,25 @@ function PlaylistsPage() {
   };
 
   const handleAdd = () => {
+    if (!requireLogin(() => handleAdd())) return;
+    
     setEditingId(null);
     setFormData({ name: '', description: '' });
     setShowForm(true);
   };
 
   const handleEdit = (playlist) => {
+    if (!requireLogin(() => handleEdit(playlist))) return;
+    
     setEditingId(playlist.id);
     setFormData({ name: playlist.name, description: playlist.description });
     setShowForm(true);
   };
-
+    
   const handleDelete = async (id) => {
+    
+    if (!requireLogin(() => handleDelete(id))) return;
+    
     if (window.confirm('Are you sure?')) {
       try {
         await playlistService.delete(id);

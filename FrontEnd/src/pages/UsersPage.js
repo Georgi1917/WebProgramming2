@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import UserList from '../components/Users/UserList';
 import UserForm from '../components/Users/UserForm';
 import userService from '../services/userService';
 import './CrudPage.css';
 
 function UsersPage() {
+  const { requireLogin } = useAuth();
   const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -27,18 +29,26 @@ function UsersPage() {
   };
 
   const handleAdd = () => {
+    if (!requireLogin(() => handleAdd())) return;
+    
     setEditingId(null);
     setFormData({ username: '', email: '', password: '' });
     setShowForm(true);
   };
 
   const handleEdit = (user) => {
+    if (!requireLogin(() => handleEdit(user))) return;
+    
     setEditingId(user.id);
     setFormData({ username: user.username, email: user.email });
     setShowForm(true);
   };
+  
 
   const handleDelete = async (id) => {
+    
+    if (!requireLogin(() => handleDelete(id))) return;
+    
     if (window.confirm('Are you sure?')) {
       try {
         await userService.delete(id);

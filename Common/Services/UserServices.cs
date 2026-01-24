@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Common.Data;
 using Common.Entities;
+using Common.Infrastructure.AuthDTOs;
 using Common.Infrastructure.UserDTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +67,7 @@ public class UserServices
 
     }
 
-    public void Save(UserCreateDto dto)
+    public void Save(RegisterDto dto)
     {
 
         CreatePasswordHash(dto.Password, out var hash, out var salt);

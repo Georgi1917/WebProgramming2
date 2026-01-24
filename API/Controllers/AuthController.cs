@@ -42,7 +42,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("/login")]
+        [Route("login")]
         public IActionResult Login(LoginDto dto)
         {
             
@@ -84,6 +84,22 @@ namespace API.Controllers
                 token = new JwtSecurityTokenHandler().WriteToken(token)
             });
 
+
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        public IActionResult Register(RegisterDto dto)
+        {
+            
+            User user = _services.GetByUsername(dto.Username);
+
+            if (user != null)
+                return BadRequest();
+
+            _services.Save(dto);
+
+            return Ok();
 
         }
 

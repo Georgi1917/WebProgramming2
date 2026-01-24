@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import ArtistList from '../components/Artists/ArtistList';
 import ArtistForm from '../components/Artists/ArtistForm';
 import artistService from '../services/artistService';
 import './CrudPage.css';
 
 function ArtistsPage() {
+  const { requireLogin } = useAuth();
   const [artists, setArtists] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -27,18 +29,24 @@ function ArtistsPage() {
   };
 
   const handleAdd = () => {
+    if (!requireLogin(() => handleAdd())) return;
+    
     setEditingId(null);
     setFormData({ name: '', country: '' });
     setShowForm(true);
   };
 
   const handleEdit = (artist) => {
+    if (!requireLogin(() => handleEdit(artist))) return;
+    
     setEditingId(artist.id);
     setFormData({ name: artist.name, country: artist.country });
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
+    if (!requireLogin(() => handleDelete(id))) return;
+    
     if (window.confirm('Are you sure?')) {
       try {
         await artistService.delete(id);

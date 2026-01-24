@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Common.Entities;
 using Common.Services;
 using Common.Infrastructure.UserDTOs;
+using Common.Infrastructure.AuthDTOs;
 
 namespace API.Controllers
 {
@@ -38,7 +39,7 @@ namespace API.Controllers
 
         }
         [HttpPost]
-        public IActionResult Post([FromBody] UserCreateDto user)
+        public IActionResult Post([FromBody] RegisterDto user)
         {
             
             _services.Save(user);
