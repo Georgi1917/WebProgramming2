@@ -1,7 +1,9 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using API.Services;
 using Common.Entities;
 using Common.Infrastructure.AuthDTOs;
 using Common.Services;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers
@@ -19,8 +22,8 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         
-        private readonly IConfiguration _configuration;
         private readonly UserServices _services;
+        private readonly TokenService _tokenServices;
 
         private bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
@@ -35,15 +38,15 @@ namespace API.Controllers
 
         }
 
-        public AuthController(IConfiguration configuration, UserServices services)
+        public AuthController(UserServices services, TokenService tokenService)
         {
-            _configuration = configuration;
             _services      = services;
+            _tokenServices = tokenService;
         }
 
         [HttpPost]
         [Route("login")]
-        public IActionResult Login(LoginDto dto)
+        public IActionResult Login([FromBody]LoginDto dto)
         {
             
             User user = _services.GetByUsername(dto.Username);
@@ -56,32 +59,11 @@ namespace API.Controllers
             if (!isValid)
                 return Unauthorized();
 
-            Claim[] claims = new Claim[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-            };
-
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])
-            );
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(
-                    int.Parse(_configuration["Jwt:ExpireMinutes"])
-                ),
-                signingCredentials: new SigningCredentials(
-                    key, SecurityAlgorithms.HmacSha256
-                )
-            );
-
+            string token = _tokenServices.CreateToken(user);
 
             return Ok(new
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token)
+                token = token
             });
 
 
@@ -89,7 +71,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public IActionResult Register(RegisterDto dto)
+        public IActionResult Register([FromBody]RegisterDto dto)
         {
             
             User user = _services.GetByUsername(dto.Username);

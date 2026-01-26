@@ -5,6 +5,7 @@ using Common.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<UserServices>();
 builder.Services.AddScoped<ArtistServices>();
 builder.Services.AddScoped<PlaylistServices>();
+builder.Services.AddScoped<AlbumService>();
+builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 

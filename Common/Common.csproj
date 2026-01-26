@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Entities\" />
+    <Folder Include="Infrastructure\AlbumDTOs\" />
     <Folder Include="Infrastructure\AuthDTOs\" />
     <Folder Include="Infrastructure\UserDTOs\" />
     <Folder Include="Infrastructure\ArtistDTOs\" />
