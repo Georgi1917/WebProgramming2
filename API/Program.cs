@@ -44,6 +44,7 @@ builder.Services.AddScoped<UserServices>();
 builder.Services.AddScoped<ArtistServices>();
 builder.Services.AddScoped<PlaylistServices>();
 builder.Services.AddScoped<AlbumService>();
+builder.Services.AddScoped<SongService>();
 builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();

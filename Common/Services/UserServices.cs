@@ -104,7 +104,7 @@ public class UserServices
     public void Delete(int id)
     {
         
-        User needed = _context.Users.FirstOrDefault(u => u.Id == id);
+        User needed = _context.Users.Find(id);
         if (needed != null) _context.Users.Remove(needed);
         _context.SaveChanges();
 

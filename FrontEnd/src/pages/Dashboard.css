@@ -13,12 +13,28 @@
   gap: 20px;
 }
 
+.stat-card-link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card-link:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card-link:hover .stat-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 .stat-card {
   background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
 }
 
 .stat-card h2 {

@@ -25,6 +25,7 @@ namespace API.Controllers
         public IActionResult Get()
         {
             
+            Console.WriteLine(Directory.GetCurrentDirectory());
             return Ok(_services.GetAll());
 
         }

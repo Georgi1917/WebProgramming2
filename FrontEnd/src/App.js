@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import PlaylistsPage from './pages/PlaylistsPage';
 import ArtistsPage from './pages/ArtistsPage';
 import UsersPage from './pages/UsersPage';
+import SongsPage from './pages/SongsPage';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/playlists" element={<PlaylistsPage />} />
             <Route path="/artists" element={<ArtistsPage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/songs" element={<SongsPage />} />
           </Routes>
         </Layout>
       </Router>

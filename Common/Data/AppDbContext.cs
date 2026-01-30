@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Artist> Artists { get; set; }
     public DbSet<Playlist> Playlists { get; set; }
     public DbSet<Album> Albums { get; set; }
+    public DbSet<Song> Songs { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {}
@@ -54,6 +55,19 @@ public class AppDbContext : DbContext
             .HasOne(e => e.Artist)
             .WithMany(e => e.Albums)
             .HasForeignKey(e => e.ArtistId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        #endregion
+
+        #region Song
+
+        modelBuilder.Entity<Song>()
+            .HasKey(e => e.Id);
+
+        modelBuilder.Entity<Song>()
+            .HasOne(e => e.Album)
+            .WithMany(e => e.Songs)
+            .HasForeignKey(e => e.AlbumId)
             .OnDelete(DeleteBehavior.Cascade);
 
         #endregion
