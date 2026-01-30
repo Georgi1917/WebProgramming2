@@ -12,8 +12,7 @@ function PlaylistList({ playlists, onEdit, onDelete }) {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
+            <th>Title</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -21,8 +20,7 @@ function PlaylistList({ playlists, onEdit, onDelete }) {
           {playlists.map(playlist => (
             <tr key={playlist.id}>
               <td>{playlist.id}</td>
-              <td>{playlist.name}</td>
-              <td>{playlist.description}</td>
+              <td>{playlist.title}</td>
               <td>
                 <button onClick={() => onEdit(playlist)} className="btn-edit">Edit</button>
                 <button onClick={() => onDelete(playlist.id)} className="btn-delete">Delete</button>

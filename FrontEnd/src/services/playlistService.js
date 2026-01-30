@@ -1,11 +1,11 @@
 import api from './api';
 
 const playlistService = {
-  getAll: () => api.get('/playlist'),
-  getById: (id) => api.get(`/playlist/${id}`),
-  create: (data) => api.post('/playlist', data),
-  update: (id, data) => api.put(`/playlist/${id}`, data),
-  delete: (id) => api.delete(`/playlist/${id}`),
+  getAll: () => api.get('/playlists'),
+  getById: (id) => api.get(`/playlists/${id}`),
+  create: (data) => api.post('/playlists', data),
+  update: (id, data) => api.put(`/playlists/${id}`, data),
+  delete: (id) => api.delete(`/playlists/${id}`),
 };
 
 export default playlistService;

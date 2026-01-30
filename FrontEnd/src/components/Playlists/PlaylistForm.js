@@ -20,22 +20,13 @@ function PlaylistForm({ initialData, onSubmit, onCancel, isEditing }) {
         <h2>{isEditing ? 'Edit Playlist' : 'Create Playlist'}</h2>
         
         <div className="form-group">
-          <label>Name *</label>
+          <label>Title *</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="title"
+            value={formData.title}
             onChange={handleChange}
             required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
           />
         </div>
 

@@ -6,7 +6,7 @@ import playlistService from '../services/playlistService';
 import './CrudPage.css';
 
 function PlaylistsPage() {
-  const { requireLogin } = useAuth();
+  const { requireLogin, setShowLoginModal, isAuthenticated } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -15,7 +15,7 @@ function PlaylistsPage() {
 
   useEffect(() => {
     fetchPlaylists();
-  }, []);
+  }, [isAuthenticated]);
 
   const fetchPlaylists = async () => {
     setLoading(true);
@@ -23,7 +23,11 @@ function PlaylistsPage() {
       const response = await playlistService.getAll();
       setPlaylists(response.data);
     } catch (error) {
-      console.error('Error fetching playlists:', error);
+      if (error.response?.status === 401) {
+        setShowLoginModal(true);
+      } else {
+        console.error('Error fetching playlists:', error);
+      }
     }
     setLoading(false);
   };
@@ -32,7 +36,7 @@ function PlaylistsPage() {
     if (!requireLogin(() => handleAdd())) return;
     
     setEditingId(null);
-    setFormData({ name: '', description: '' });
+    setFormData({ title: '' });
     setShowForm(true);
   };
 
@@ -40,7 +44,7 @@ function PlaylistsPage() {
     if (!requireLogin(() => handleEdit(playlist))) return;
     
     setEditingId(playlist.id);
-    setFormData({ name: playlist.name, description: playlist.description });
+    setFormData({ title: playlist.title });
     setShowForm(true);
   };
     

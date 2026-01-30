@@ -32,7 +32,14 @@ public class PlaylistServices
     public PlaylistReadDto GetById(int userId, int playlistId)
     {
         
-        Playlist p = _context.Playlists.FirstOrDefault(p => (p.Id == playlistId && p.UserId == userId));
+        Playlist p = _context.Playlists.FirstOrDefault(p => p.Id == playlistId && p.UserId == userId);
+
+        if (p == null)
+            return new PlaylistReadDto
+            {
+                Id = 0,
+                Title = "Invalid"
+            };
 
         return new PlaylistReadDto
         {

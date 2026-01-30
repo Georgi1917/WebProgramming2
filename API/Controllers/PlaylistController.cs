@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Common.Entities;
 using Common.Infrastructure.PlaylistDTOs;
 using Common.Services;
@@ -6,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/users/{userId}/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PlaylistsController : ControllerBase
     {
@@ -21,49 +23,75 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(int userId)
+        public IActionResult Get()
         {
             
-            Console.WriteLine(userId);
-            return Ok(_service.Get(userId));
+            string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (loggedUserId == null)
+                return Unauthorized();
+
+            return Ok(_service.Get(Convert.ToInt32(loggedUserId)));
 
         }
 
         [HttpGet]
         [Route("{playlistId}")]
-        public IActionResult Get(int userId, int playlistId)
+        public IActionResult Get(int playlistId)
         {
+
+            string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (loggedUserId == null)
+                return Unauthorized();
             
-            return Ok(_service.GetById(userId, playlistId));
+            return Ok(_service.GetById(Convert.ToInt32(loggedUserId), playlistId));
 
         }
 
         [HttpPost]
-        public IActionResult Post(int userId, [FromBody]PlaylistCreateDto playlist)
+        public IActionResult Post([FromBody]PlaylistCreateDto playlist)
         {
+
+            string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (loggedUserId == null)
+                return Unauthorized();
             
-            _service.Save(userId, playlist);
+            _service.Save(Convert.ToInt32(loggedUserId), playlist);
             return Ok(playlist);
 
         }
 
         [HttpPut]
         [Route("{playlistId}")]
-        public IActionResult Put(int userId, int playlistId, [FromBody]PlaylistCreateDto playlist)
+        public IActionResult Put(int playlistId, [FromBody]PlaylistCreateDto playlist)
         {
+
+            string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (loggedUserId == null)
+                return Unauthorized();
             
-            _service.Update(userId, playlistId, playlist);
+            _service.Update(Convert.ToInt32(loggedUserId), playlistId, playlist);
             return Ok(playlist);
 
         }
 
         [HttpDelete]
         [Route("{playlistId}")]
-        public IActionResult Delete(int userId, int playlistId)
+        public IActionResult Delete(int playlistId)
         {
+
+            string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (loggedUserId == null)
+                return Unauthorized();
             
-            PlaylistReadDto forDelete = _service.GetById(userId, playlistId);
-            _service.Delete(userId, playlistId);
+            PlaylistReadDto forDelete = _service.GetById(Convert.ToInt32(loggedUserId), playlistId);
+
+            _service.Delete(Convert.ToInt32(loggedUserId), playlistId);
+
             return Ok(forDelete);
 
         }
