@@ -38,12 +38,13 @@ public class UserServices
         
         return _context.Users
                         .AsQueryable()
-                        .Select(u => new UserReadDto
+                        .Select(e => new UserReadDto
                         {
-                            Id = u.Id,
-                            Username = u.Username,
-                            Email = u.Email
-                        }).ToList();
+                            Id = e.Id,
+                            Username = e.Username,
+                            Email = e.Email
+                        })
+                        .ToList();
 
     }
 
@@ -51,19 +52,21 @@ public class UserServices
     {
         
         return _context.Users
-                        .Select(u => new UserReadDto
+                        .Select(e => new UserReadDto
                         {
-                            Id = u.Id,
-                            Username = u.Username,
-                            Email = u.Email
-                        }).FirstOrDefault(u => u.Id == id);
+                            Id = e.Id,
+                            Username = e.Username,
+                            Email = e.Email
+                        })
+                        .FirstOrDefault(u => u.Id == id);
 
     }
 
     public User GetByUsername(string username)
     {
         
-        return _context.Users.FirstOrDefault(u => u.Username == username);
+        return _context.Users
+                        .FirstOrDefault(u => u.Username == username);
 
     }
 

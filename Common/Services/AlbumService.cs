@@ -4,6 +4,8 @@ using System.Linq;
 using Common.Data;
 using Common.Entities;
 using Common.Infrastructure.AlbumDTOs;
+using Common.Infrastructure.SongDTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Common.Services;
 
@@ -33,16 +35,29 @@ public class AlbumService
 
     }
 
-    public AlbumReadDto Get(int id)
+    public AlbumDetailDto Get(int id)
     {
-        
-        return _context.Albums.Select(e => new AlbumReadDto
-                                {
-                                    Id = e.Id,
-                                    Title = e.Title,
-                                    ReleaseDate = e.ReleaseDate,
-                                    ArtistId = e.ArtistId
-                                }).FirstOrDefault(e => e.Id == id);
+
+        Album al = _context.Albums.Include(e => e.Songs).FirstOrDefault(e => e.Id == id);
+
+        return new AlbumDetailDto
+        {
+            Id = al.Id,
+            Title = al.Title,
+            ReleaseDate = al.ReleaseDate,
+            ArtistId = al.ArtistId,
+            Songs = al.Songs.Select(e => new SongReadDto
+            {
+                Id = e.Id,
+                Title = e.Title,
+                DurationInSeconds = e.DurationInSeconds,
+                StreamUrl = e.FilePath,
+                FileName = e.FileName,
+                ContentType = e.ContentType,
+                Size = e.Size,
+                AlbumId = e.AlbumId
+            }).ToList()
+        };
 
     }
 

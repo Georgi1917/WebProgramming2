@@ -28,10 +28,19 @@
 }
 
 .btn-edit,
-.btn-delete {
+.btn-delete,
+.btn-details {
   padding: 8px 12px;
   margin-right: 8px;
   font-size: 12px;
+}
+
+.btn-details {
+  background-color: #3498db;
+}
+
+.btn-details:hover {
+  background-color: #2980b9;
 }
 
 .btn-edit {

@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Playlists/CrudList.css';
 
-function ArtistList({ artists, onEdit, onDelete }) {
+function ArtistList({ artists, onEdit, onDelete, onDetails }) {
   if (artists.length === 0) {
     return <p className="empty-message">No artists found. Create one to get started!</p>;
   }
@@ -24,6 +24,7 @@ function ArtistList({ artists, onEdit, onDelete }) {
               <td>{artist.name}</td>
               <td>{artist.country || 'N/A'}</td>
               <td>
+                <button onClick={() => onDetails(artist)} className="btn-details">Details</button>
                 <button onClick={() => onEdit(artist)} className="btn-edit">Edit</button>
                 <button onClick={() => onDelete(artist.id)} className="btn-delete">Delete</button>
               </td>

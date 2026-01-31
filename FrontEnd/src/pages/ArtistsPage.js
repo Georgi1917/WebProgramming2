@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ArtistList from '../components/Artists/ArtistList';
 import ArtistForm from '../components/Artists/ArtistForm';
@@ -6,6 +7,7 @@ import artistService from '../services/artistService';
 import './CrudPage.css';
 
 function ArtistsPage() {
+  const navigate = useNavigate();
   const { requireLogin } = useAuth();
   const [artists, setArtists] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -57,6 +59,10 @@ function ArtistsPage() {
     }
   };
 
+  const handleDetails = (artist) => {
+    navigate(`/artists/${artist.id}`);
+  };
+
   const handleSubmit = async (data) => {
     try {
       if (editingId) {
@@ -92,6 +98,7 @@ function ArtistsPage() {
           artists={artists}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onDetails={handleDetails}
         />
       )}
     </div>

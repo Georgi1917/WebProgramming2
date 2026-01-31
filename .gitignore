@@ -3,3 +3,4 @@ obj/
 **/bin/
 **/obj/
 FrontEnd/node_modules
+API/UploadedMedia

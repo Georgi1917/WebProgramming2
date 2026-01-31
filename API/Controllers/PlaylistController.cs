@@ -37,7 +37,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{playlistId}")]
-        public IActionResult Get(int playlistId)
+        public IActionResult Get([FromRoute]int playlistId)
         {
 
             string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -65,7 +65,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{playlistId}")]
-        public IActionResult Put(int playlistId, [FromBody]PlaylistCreateDto playlist)
+        public IActionResult Put([FromRoute]int playlistId, [FromBody]PlaylistCreateDto playlist)
         {
 
             string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -80,7 +80,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{playlistId}")]
-        public IActionResult Delete(int playlistId)
+        public IActionResult Delete([FromRoute]int playlistId)
         {
 
             string loggedUserId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

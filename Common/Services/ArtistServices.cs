@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Data;
 using Common.Entities;
+using Common.Infrastructure.AlbumDTOs;
 using Common.Infrastructure.ArtistDTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Common.Services;
 
@@ -34,15 +36,23 @@ public class ArtistServices
 
     }
 
-    public ArtistReadDto GetById(int id)
+    public ArtistDetailDto GetById(int id)
     {
         
-        Artist a = _context.Artists.FirstOrDefault(i => i.Id == id);
-        return new ArtistReadDto
+        Artist a = _context.Artists.Include(i => i.Albums).FirstOrDefault(i => i.Id == id);
+
+        return new ArtistDetailDto
         {
             Id = a.Id,
             Name = a.Name,
-            Country = a.Country
+            Country = a.Country,
+            Albums = a.Albums.Select(al => new AlbumReadDto
+            {
+                Id = al.Id,
+                Title = al.Title,
+                ReleaseDate = al.ReleaseDate,
+                ArtistId = al.ArtistId
+            }).ToList()
         };
 
     }

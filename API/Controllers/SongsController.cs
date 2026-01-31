@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using System;
+using System.IO;
 using Common.Entities;
 using Common.Infrastructure.SongDTOs;
 using Common.Services;
@@ -34,7 +36,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get([FromRoute]int id)
         {
             
             return Ok(_service.GetById(id));
@@ -43,7 +45,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("stream/{id}")]
-        public IActionResult Stream(int id)
+        public IActionResult Stream([FromRoute]int id)
         {
             
             SongReadDto dto = _service.GetById(id);
@@ -57,7 +59,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(IFormFile file, [FromBody]SongCreateDto dto)
+        public async Task<IActionResult> Post(IFormFile file, [FromForm] SongCreateDto dto)
         {
             
             if (file == null || file.Length == 0) return BadRequest();
@@ -73,7 +75,7 @@ namespace API.Controllers
 
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {
-                file.CopyTo(stream);
+                await file.CopyToAsync(stream);
             }
 
             Song song = new Song
@@ -95,7 +97,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Put(int id, SongUpdateDto dto)
+        public IActionResult Put([FromRoute]int id, [FromBody]SongUpdateDto dto)
         {
             
             _service.Update(id, dto);
@@ -106,10 +108,14 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute]int id)
         {
             
             SongReadDto needed = _service.GetById(id);
+
+            if (System.IO.File.Exists(needed.StreamUrl))
+                System.IO.File.Delete(needed.StreamUrl);
+
             _service.Delete(id);
 
             return Ok(needed);

@@ -30,7 +30,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get([FromRoute]int id)
         {
             
             ArtistReadDto item = _services.GetById(id);
@@ -48,7 +48,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Put(int id, [FromBody] ArtistCreateDto item)
+        public IActionResult Put([FromRoute]int id, [FromBody] ArtistCreateDto item)
         {
             
             bool updated = _services.Update(id, item);
@@ -61,7 +61,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute]int id)
         {
 
             ArtistReadDto forDelete = _services.GetById(id);

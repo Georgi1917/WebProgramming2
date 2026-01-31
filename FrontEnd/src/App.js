@@ -7,6 +7,8 @@ import RegisterModal from './components/Auth/RegisterModal';
 import Dashboard from './pages/Dashboard';
 import PlaylistsPage from './pages/PlaylistsPage';
 import ArtistsPage from './pages/ArtistsPage';
+import ArtistDetailsPage from './pages/ArtistDetailsPage';
+import AlbumDetailsPage from './pages/AlbumDetailsPage';
 import UsersPage from './pages/UsersPage';
 import SongsPage from './pages/SongsPage';
 import './App.css';
@@ -22,6 +24,8 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/playlists" element={<PlaylistsPage />} />
             <Route path="/artists" element={<ArtistsPage />} />
+            <Route path="/artists/:id" element={<ArtistDetailsPage />} />
+            <Route path="/albums/:id" element={<AlbumDetailsPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/songs" element={<SongsPage />} />
           </Routes>

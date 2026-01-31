@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7152/api';
+export const API_BASE_URL = 'https://localhost:7152/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  }
 });
 
 // Add token to requests if it exists

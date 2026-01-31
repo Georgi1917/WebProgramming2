@@ -25,14 +25,13 @@ namespace API.Controllers
         public IActionResult Get()
         {
             
-            Console.WriteLine(Directory.GetCurrentDirectory());
             return Ok(_services.GetAll());
 
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get([FromRoute]int id)
         {
             
             UserReadDto user = _services.GetById(id);
@@ -50,7 +49,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Put(int id, [FromBody] UserUpdateDto user)
+        public IActionResult Put([FromRoute]int id, [FromBody] UserUpdateDto user)
         {
             
             _services.Update(id, user);
@@ -61,7 +60,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute]int id)
         {
 
             UserReadDto forDelete = _services.GetById(id);

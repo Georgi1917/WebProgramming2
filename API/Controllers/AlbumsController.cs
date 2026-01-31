@@ -30,7 +30,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById([FromRoute]int id)
         {
             
             return Ok(_service.Get(id));
@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(AlbumCreateDto dto)
+        public IActionResult Post([FromBody]AlbumCreateDto dto)
         {
             
             _service.Save(dto);
@@ -49,7 +49,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Put(int id, AlbumCreateDto dto)
+        public IActionResult Put([FromRoute]int id, [FromBody]AlbumCreateDto dto)
         {
             
             _service.Update(id, dto);
@@ -60,7 +60,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute]int id)
         {
             
             AlbumReadDto forDelete = _service.Get(id);

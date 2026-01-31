@@ -1,0 +1,73 @@
+.song-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-play {
+  padding: 8px 14px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-play:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+.btn-play:active {
+  transform: scale(0.98);
+}
+
+.btn-edit {
+  padding: 8px 14px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  margin-right: 0 !important;
+}
+
+.btn-edit:hover {
+  background-color: #229954;
+  transform: scale(1.05);
+}
+
+.btn-edit:active {
+  transform: scale(0.98);
+}
+
+.btn-delete {
+  padding: 8px 14px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  margin-right: 0 !important;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+
+.btn-delete:active {
+  transform: scale(0.98);
+}
