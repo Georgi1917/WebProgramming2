@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import SongList from '../components/Songs/SongList';
 import SongForm from '../components/Songs/SongForm';
+import AudioPlayer from '../components/Songs/AudioPlayer';
 import songService from '../services/songService';
+import { API_BASE_URL } from '../services/api';
 import './CrudPage.css';
 
 function SongsPage() {
@@ -12,6 +14,9 @@ function SongsPage() {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ title: '', durationInSeconds: 0, albumId: 0 });
   const [loading, setLoading] = useState(false);
+  const audioRef = useRef(null);
+  const [currentSongId, setCurrentSongId] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     fetchSongs();
@@ -88,6 +93,40 @@ function SongsPage() {
     }
   };
 
+  const togglePlay = async (song) => {
+    if (!audioRef.current) return;
+
+    const url = `${API_BASE_URL}/songs/stream/${song.id}`;
+
+    if (currentSongId !== song.id) {
+      // load new song
+      try {
+        audioRef.current.pause();
+        audioRef.current.src = url;
+        audioRef.current.load();
+        await audioRef.current.play();
+        setCurrentSongId(song.id);
+        setIsPlaying(true);
+      } catch (err) {
+        console.error('Playback failed', err);
+        setIsPlaying(false);
+      }
+    } else {
+      // same song: toggle
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (err) {
+          console.error('Playback failed', err);
+        }
+      }
+    }
+  };
+
   return (
     <div className="crud-page">
       <div className="page-header">
@@ -105,12 +144,28 @@ function SongsPage() {
       )}
 
       {loading ? <p>Loading...</p> : (
-        <SongList
-          songs={songs}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <>
+          {currentSongId && songs.find(s => s.id === currentSongId) && (
+            <AudioPlayer
+              audioRef={audioRef}
+              song={songs.find(s => s.id === currentSongId)}
+              isPlaying={isPlaying}
+              onTogglePlay={togglePlay}
+              currentSongId={currentSongId}
+            />
+          )}
+          <SongList
+            songs={songs}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onPlay={togglePlay}
+            currentSongId={currentSongId}
+            isPlaying={isPlaying}
+          />
+        </>
       )}
+
+      <audio ref={audioRef} onEnded={() => { setIsPlaying(false); setCurrentSongId(null); }} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Common.Entities;
 
@@ -13,5 +14,7 @@ public class Song : BaseEntity
     public long Size { get; set; }
     public int AlbumId { get; set; }
     public Album Album { get; set; }
+
+    public List<PlaylistSongs> PlaylistSongs { get; set; }
 
 }

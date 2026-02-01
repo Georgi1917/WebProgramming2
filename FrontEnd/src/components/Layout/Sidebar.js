@@ -15,6 +15,9 @@ function Sidebar() {
         <Link to="/artists" className="nav-item">
           🎤 Artists
         </Link>
+        <Link to="/songs" className="nav-item">
+          🎵 Songs
+        </Link>
         <Link to="/users" className="nav-item">
           👥 Users
         </Link>
