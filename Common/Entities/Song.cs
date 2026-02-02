@@ -16,5 +16,6 @@ public class Song : BaseEntity
     public Album Album { get; set; }
 
     public List<PlaylistSongs> PlaylistSongs { get; set; }
+    public List<UserLikedSongs> LikedByUsers { get; set; }
 
 }

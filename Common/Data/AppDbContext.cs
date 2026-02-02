@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Album> Albums { get; set; }
     public DbSet<Song> Songs { get; set; }
     public DbSet<PlaylistSongs> PlaylistSongs { get; set; }
+    public DbSet<UserLikedSongs> UserLikedSongs { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {}
@@ -87,6 +88,23 @@ public class AppDbContext : DbContext
             .HasOne(ps => ps.Song)
             .WithMany(s => s.PlaylistSongs)
             .HasForeignKey(ps => ps.SongId);
+
+        #endregion
+
+        #region UserLikedSongs
+
+        modelBuilder.Entity<UserLikedSongs>()
+            .HasKey(e => e.Id);
+
+        modelBuilder.Entity<UserLikedSongs>()
+            .HasOne(e => e.User)
+            .WithMany(u => u.LikedSongs)
+            .HasForeignKey(e => e.UserId);
+
+        modelBuilder.Entity<UserLikedSongs>()
+            .HasOne(e => e.Song)
+            .WithMany(s => s.LikedByUsers)
+            .HasForeignKey(e => e.SongId);
 
         #endregion
 

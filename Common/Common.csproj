@@ -16,6 +16,7 @@
     <Folder Include="Infrastructure\UserDTOs\" />
     <Folder Include="Infrastructure\ArtistDTOs\" />
     <Folder Include="Infrastructure\PlaylistDTOs\" />
+    <Folder Include="Infrastructure\UserLikedSongsDTOs\" />
     <Folder Include="Migrations\" />
     <Folder Include="Services\" />
   </ItemGroup>

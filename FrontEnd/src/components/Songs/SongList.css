@@ -71,3 +71,27 @@
 .btn-delete:active {
   transform: scale(0.98);
 }
+
+.btn-add-playlist {
+  padding: 8px 10px;
+  background: linear-gradient(90deg,#ff9a9e,#fecfef);
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.15s ease;
+}
+
+.btn-add-playlist:hover { transform: scale(1.08); }
+
+.btn-like {
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.15s ease;
+}
+
+.btn-like:hover { transform: scale(1.2); }

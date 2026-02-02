@@ -3,13 +3,16 @@ import { useAuth } from '../context/AuthContext';
 import SongList from '../components/Songs/SongList';
 import SongForm from '../components/Songs/SongForm';
 import AudioPlayer from '../components/Songs/AudioPlayer';
+import PlaylistSelector from '../components/Playlists/PlaylistSelector';
 import songService from '../services/songService';
+import userLikedSongsService from '../services/userLikedSongsService';
 import { API_BASE_URL } from '../services/api';
 import './CrudPage.css';
 
 function SongsPage() {
-  const { requireLogin, setShowLoginModal, isAuthenticated } = useAuth();
+  const { requireLogin, setShowLoginModal, isAuthenticated, user } = useAuth();
   const [songs, setSongs] = useState([]);
+  const [likedSongIds, setLikedSongIds] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ title: '', durationInSeconds: 0, albumId: 0 });
@@ -17,10 +20,15 @@ function SongsPage() {
   const audioRef = useRef(null);
   const [currentSongId, setCurrentSongId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showPlaylistSelector, setShowPlaylistSelector] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState(null);
 
   useEffect(() => {
     fetchSongs();
-  }, [isAuthenticated]);
+    if (isAuthenticated && user?.id) {
+      fetchLikedSongs();
+    }
+  }, [isAuthenticated, user?.id]);
 
   const fetchSongs = async () => {
     setLoading(true);
@@ -35,6 +43,16 @@ function SongsPage() {
       }
     }
     setLoading(false);
+  };
+
+  const fetchLikedSongs = async () => {
+    try {
+      const res = await userLikedSongsService.getLikedByUser(user.id);
+      const likedIds = res.data?.map(uls => uls.song?.id || uls.songId) || [];
+      setLikedSongIds(likedIds);
+    } catch (error) {
+      console.error('Error fetching liked songs:', error);
+    }
   };
 
   const handleAdd = () => {
@@ -62,6 +80,16 @@ function SongsPage() {
     
     if (window.confirm('Are you sure?')) {
       try {
+        // If the deleted song is currently playing, stop and clear the player
+        if (id === currentSongId) {
+          if (audioRef.current) {
+            try { audioRef.current.pause(); } catch (e) {}
+            try { audioRef.current.removeAttribute('src'); audioRef.current.load(); } catch (e) {}
+          }
+          setIsPlaying(false);
+          setCurrentSongId(null);
+        }
+
         await songService.delete(id);
         fetchSongs();
       } catch (error) {
@@ -127,11 +155,45 @@ function SongsPage() {
     }
   };
 
+  const handleOpenPlaylistSelector = (songId) => {
+    if (!requireLogin(() => handleOpenPlaylistSelector(songId))) return;
+    setSelectedSongId(songId);
+    setShowPlaylistSelector(true);
+  };
+
+  const handlePlaylistSelectorSuccess = () => {
+    setShowPlaylistSelector(false);
+  };
+
+  const handleLike = async (songId) => {
+    if (!requireLogin(() => handleLike(songId))) return;
+    try {
+      await userLikedSongsService.addLike({
+        userId: user.id,
+        songId: songId
+      });
+      setLikedSongIds([...likedSongIds, songId]);
+    } catch (error) {
+      console.error('Error liking song:', error);
+      alert('Failed to like song');
+    }
+  };
+
+  const handleUnlike = async (songId) => {
+    if (!requireLogin(() => handleUnlike(songId))) return;
+    try {
+      await userLikedSongsService.removeLike(user.id, songId);
+      setLikedSongIds(likedSongIds.filter(id => id !== songId));
+    } catch (error) {
+      console.error('Error unliking song:', error);
+      alert('Failed to unlike song');
+    }
+  };
+
   return (
     <div className="crud-page">
       <div className="page-header">
         <h1>🎵 Songs</h1>
-        <button onClick={handleAdd} className="btn-primary">+ Add Song</button>
       </div>
 
       {showForm && (
@@ -159,10 +221,22 @@ function SongsPage() {
             onEdit={handleEdit}
             onDelete={handleDelete}
             onPlay={togglePlay}
+            onAddToPlaylist={(songId) => handleOpenPlaylistSelector(songId)}
+            onLike={handleLike}
+            onUnlike={handleUnlike}
+            likedSongIds={likedSongIds}
             currentSongId={currentSongId}
             isPlaying={isPlaying}
           />
         </>
+      )}
+
+      {showPlaylistSelector && selectedSongId && (
+        <PlaylistSelector
+          songId={selectedSongId}
+          onClose={() => setShowPlaylistSelector(false)}
+          onSuccess={handlePlaylistSelectorSuccess}
+        />
       )}
 
       <audio ref={audioRef} onEnded={() => { setIsPlaying(false); setCurrentSongId(null); }} />

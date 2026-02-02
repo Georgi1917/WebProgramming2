@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './SongForm.css';
 
-function SongForm({ song, albumId, onSubmit, onCancel, isEditing }) {
+function SongForm({ initialData, albumId, onSubmit, onCancel, isEditing }) {
   const [formData, setFormData] = useState({
     title: '',
     durationInSeconds: '',
@@ -10,16 +10,16 @@ function SongForm({ song, albumId, onSubmit, onCancel, isEditing }) {
   const [file, setFile] = useState(null);
 
   useEffect(() => {
-    if (song) {
+    if (initialData) {
       setFormData({
-        title: song.title || '',
-        durationInSeconds: song.durationInSeconds || '',
-        albumId: albumId
+        title: initialData.title || '',
+        durationInSeconds: initialData.durationInSeconds || '',
+        albumId: initialData.albumId || albumId
       });
     } else {
       setFormData({ title: '', durationInSeconds: '', albumId: albumId });
     }
-  }, [song, albumId]);
+  }, [initialData, albumId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,11 +52,6 @@ function SongForm({ song, albumId, onSubmit, onCancel, isEditing }) {
           <div className="form-group">
             <label htmlFor="durationInSeconds">Duration (seconds)</label>
             <input id="durationInSeconds" name="durationInSeconds" type="number" min="0" value={formData.durationInSeconds} onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="albumId">Album ID</label>
-            <input id="albumId" name="albumId" type="number" value={formData.albumId} disabled className="disabled-input" />
-            <small>Auto-filled with current album</small>
           </div>
           {!isEditing && (
             <div className="form-group">

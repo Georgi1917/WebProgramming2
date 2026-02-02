@@ -3,30 +3,38 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import albumService from '../services/albumService';
 import songService from '../services/songService';
+import userLikedSongsService from '../services/userLikedSongsService';
 import { API_BASE_URL } from '../services/api';
 import SongForm from '../components/Songs/SongForm';
 import AudioPlayer from '../components/Songs/AudioPlayer';
+import PlaylistSelector from '../components/Playlists/PlaylistSelector';
 import './CrudPage.css';
 import './AlbumDetailsPage.css';
 
 function AlbumDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { requireLogin } = useAuth();
+  const { requireLogin, isAuthenticated, user } = useAuth();
 
   const [album, setAlbum] = useState(null);
   const [songs, setSongs] = useState([]);
+  const [likedSongIds, setLikedSongIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingSong, setEditingSong] = useState(null);
+  const [showPlaylistSelector, setShowPlaylistSelector] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState(null);
   const audioRef = useRef(null);
   const [currentSongId, setCurrentSongId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     fetchAlbumAndSongs();
-  }, [id]);
+    if (isAuthenticated && user?.id) {
+      fetchLikedSongs();
+    }
+  }, [id, isAuthenticated, user?.id]);
 
   const fetchAlbumAndSongs = async () => {
     setLoading(true);
@@ -45,6 +53,16 @@ function AlbumDetailsPage() {
     setLoading(false);
   };
 
+  const fetchLikedSongs = async () => {
+    try {
+      const res = await userLikedSongsService.getLikedByUser(user.id);
+      const likedIds = res.data?.map(uls => uls.song?.id || uls.songId) || [];
+      setLikedSongIds(likedIds);
+    } catch (error) {
+      console.error('Error fetching liked songs:', error);
+    }
+  };
+
   const handleCreateSong = () => {
     if (!requireLogin(() => handleCreateSong())) return;
     setEditingSong(null);
@@ -61,6 +79,16 @@ function AlbumDetailsPage() {
     if (!requireLogin(() => handleDeleteSong(songId))) return;
     if (!window.confirm('Are you sure you want to delete this song?')) return;
     try {
+      // If the deleted song is currently playing, stop and clear the player
+      if (songId === currentSongId) {
+        if (audioRef.current) {
+          try { audioRef.current.pause(); } catch (e) {}
+          try { audioRef.current.removeAttribute('src'); audioRef.current.load(); } catch (e) {}
+        }
+        setIsPlaying(false);
+        setCurrentSongId(null);
+      }
+
       await songService.delete(songId);
       await fetchAlbumAndSongs();
     } catch (err) {
@@ -124,6 +152,39 @@ function AlbumDetailsPage() {
     }
   };
 
+  const handleOpenPlaylistSelector = (songId) => {
+    if (!requireLogin(() => handleOpenPlaylistSelector(songId))) return;
+    setSelectedSongId(songId);
+    setShowPlaylistSelector(true);
+  };
+
+  const handlePlaylistSelectorSuccess = () => {
+    // Refresh the page if needed or just close the modal
+    setShowPlaylistSelector(false);
+  };
+
+  const handleLike = async (songId) => {
+    if (!requireLogin(() => handleLike(songId))) return;
+    try {
+      await userLikedSongsService.addLike({ userId: user.id, songId });
+      setLikedSongIds([...likedSongIds, songId]);
+    } catch (error) {
+      console.error('Failed to like song', error);
+      alert('Failed to like song');
+    }
+  };
+
+  const handleUnlike = async (songId) => {
+    if (!requireLogin(() => handleUnlike(songId))) return;
+    try {
+      await userLikedSongsService.removeLike(user.id, songId);
+      setLikedSongIds(likedSongIds.filter(id => id !== songId));
+    } catch (error) {
+      console.error('Failed to unlike song', error);
+      alert('Failed to unlike song');
+    }
+  };
+
   if (loading) return <div className="crud-page"><p className="loading-message">Loading...</p></div>;
   if (error || !album) return (
     <div className="crud-page">
@@ -165,7 +226,7 @@ function AlbumDetailsPage() {
 
         {showForm && (
           <SongForm
-            song={editingSong}
+            initialData={editingSong}
             albumId={parseInt(id)}
             onSubmit={handleSubmitSong}
             onCancel={() => setShowForm(false)}
@@ -204,6 +265,14 @@ function AlbumDetailsPage() {
                     <td>{song.durationInSeconds ? `${Math.floor(song.durationInSeconds/60)}:${String(song.durationInSeconds%60).padStart(2,'0')}` : 'N/A'}</td>
                     <td>
                       <button onClick={() => togglePlay(song)} className="btn-details">{currentSongId === song.id && isPlaying ? 'Pause' : 'Play'}</button>
+                      <button onClick={() => handleOpenPlaylistSelector(song.id)} className="btn-add-playlist" title="Add to Playlist">➕</button>
+                      <button
+                        onClick={() => likedSongIds.includes(song.id) ? handleUnlike(song.id) : handleLike(song.id)}
+                        className="btn-like"
+                        title={likedSongIds.includes(song.id) ? 'Unlike' : 'Like'}
+                      >
+                        {likedSongIds.includes(song.id) ? '❤️' : '🤍'}
+                      </button>
                       <button onClick={() => handleEditSong(song)} className="btn-edit">Edit</button>
                       <button onClick={() => handleDeleteSong(song.id)} className="btn-delete">Delete</button>
                     </td>
@@ -215,6 +284,14 @@ function AlbumDetailsPage() {
         )}
       </div>
       <audio ref={audioRef} onEnded={() => { setIsPlaying(false); setCurrentSongId(null); }} />
+
+      {showPlaylistSelector && selectedSongId && (
+        <PlaylistSelector
+          songId={selectedSongId}
+          onClose={() => setShowPlaylistSelector(false)}
+          onSuccess={handlePlaylistSelectorSuccess}
+        />
+      )}
     </div>
   );
 }

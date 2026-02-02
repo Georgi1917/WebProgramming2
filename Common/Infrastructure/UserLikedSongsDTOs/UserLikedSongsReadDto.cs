@@ -1,9 +1,9 @@
 using System;
 using Common.Infrastructure.SongDTOs;
 
-namespace Common.Infrastructure.PlaylistSongsDTOs;
+namespace Common.Infrastructure.UserLikedSongsDTOs;
 
-public class PlaylistSongsReadDto : BasePlaylistSongsDto
+public class UserLikedSongsReadDto : UserLikedSongsBaseDto
 {
 
     public DateTime AddedAt { get; set; }

@@ -33,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]PlaylistSongsCreateDto dto)
+        public IActionResult Post([FromBody]BasePlaylistSongsDto dto)
         {
 
             string userId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -42,21 +42,6 @@ namespace API.Controllers
                 return Unauthorized();
             
             _service.Save(dto, Convert.ToInt32(userId));
-
-            return Ok(dto);
-
-        }
-
-        [HttpPut]
-        public IActionResult Put([FromBody]PlaylistSongsUpdateDto dto)
-        {
-
-            string userId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId == null)
-                return Unauthorized();
-            
-            _service.Update(dto, Convert.ToInt32(userId));
 
             return Ok(dto);
 

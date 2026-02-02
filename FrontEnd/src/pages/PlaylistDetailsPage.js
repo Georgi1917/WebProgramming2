@@ -38,10 +38,17 @@ function PlaylistDetailsPage() {
   };
 
   const togglePlay = (song) => {
-    if (currentSongId === song.id && isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+    if (currentSongId === song.id) {
+      // Same song: toggle pause/play
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
     } else {
+      // Different song: load and play
       audioRef.current.src = `${API_BASE_URL}/songs/stream/${song.id}`;
       audioRef.current.play();
       setCurrentSongId(song.id);
@@ -105,7 +112,6 @@ function PlaylistDetailsPage() {
                 <tr>
                   <th>Song ID</th>
                   <th>Title</th>
-                  <th>Position</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -114,7 +120,6 @@ function PlaylistDetailsPage() {
                   <tr key={ps.song?.id || `song-${index}`}>
                     <td>{ps.song?.id}</td>
                     <td>{ps.song?.title}</td>
-                    <td>{ps.position}</td>
                     <td>
                       <button onClick={() => togglePlay(ps.song)} className="btn-play">
                         {currentSongId === ps.song?.id && isPlaying ? '⏸ Pause' : '▶ Play'}

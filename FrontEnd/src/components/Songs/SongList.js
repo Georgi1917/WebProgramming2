@@ -2,7 +2,7 @@ import React from 'react';
 import '../Playlists/CrudList.css';
 import './SongList.css';
 
-function SongList({ songs, onEdit, onDelete, onPlay, currentSongId, isPlaying }) {
+function SongList({ songs, onEdit, onDelete, onPlay, onAddToPlaylist, onLike, onUnlike, likedSongIds = [], currentSongId, isPlaying }) {
   if (songs.length === 0) {
     return <p className="empty-message">No songs found. Upload one to get started!</p>;
   }
@@ -30,11 +30,19 @@ function SongList({ songs, onEdit, onDelete, onPlay, currentSongId, isPlaying })
               <td>{song.id}</td>
               <td>{song.title}</td>
               <td>{formatDuration(song.durationInSeconds)}</td>
-              <td>
+                <td>
                 <div className="song-actions">
                   <button onClick={() => onPlay(song)} className="btn-details">
                     {currentSongId === song.id && isPlaying ? '⏸ Pause' : '▶ Play'}
                   </button>
+                  <button 
+                    onClick={() => likedSongIds.includes(song.id) ? onUnlike?.(song.id) : onLike?.(song.id)}
+                    className="btn-like"
+                    title={likedSongIds.includes(song.id) ? 'Unlike' : 'Like'}
+                  >
+                    {likedSongIds.includes(song.id) ? '❤️' : '🤍'}
+                  </button>
+                  <button onClick={() => onAddToPlaylist?.(song.id)} className="btn-add-playlist" title="Add to Playlist">➕</button>
                   <button onClick={() => onEdit(song)} className="btn-edit">Edit</button>
                   <button onClick={() => onDelete(song.id)} className="btn-delete">Delete</button>
                 </div>

@@ -43,7 +43,6 @@ public class PlaylistSongsService
         List<PlaylistSongs> list = _context.PlaylistSongs
                                             .Where(ps => ps.PlaylistId == playlistId)
                                             .Include(ps => ps.Song)
-                                            .OrderBy(ps => ps.Position)
                                             .ToList();
 
         return list.Select(ps => new PlaylistSongsReadDto
@@ -51,7 +50,6 @@ public class PlaylistSongsService
             PlaylistId = ps.PlaylistId,
             SongId = ps.SongId,
             AddedAt = ps.AddedAt,
-            Position = ps.Position,
             Song = new SongReadDto
             {
                 Id = ps.Song.Id,
@@ -67,7 +65,7 @@ public class PlaylistSongsService
 
     }
 
-    public void Save(PlaylistSongsCreateDto dto, int userId)
+    public void Save(BasePlaylistSongsDto dto, int userId)
     {
         
         if (!CheckIfUserOwnsPlaylist(dto.PlaylistId, userId))
@@ -79,68 +77,14 @@ public class PlaylistSongsService
         if (CheckIfExists(dto.PlaylistId, dto.SongId))
             throw new Exception("Song already added");
 
-        int maxPos = _context.PlaylistSongs
-                        .Where(ps => ps.PlaylistId == dto.PlaylistId)
-                        .Max(ps => (int?)ps.Position) ?? 0;
-
-        int finalPos = maxPos + 1;
-
         PlaylistSongs ps = new PlaylistSongs
         {
             PlaylistId = dto.PlaylistId,
             SongId = dto.SongId,
-            Position = finalPos,
             AddedAt = DateTime.UtcNow
         };
 
         _context.PlaylistSongs.Add(ps);
-        _context.SaveChanges();
-
-    }
-
-    public void Update(PlaylistSongsUpdateDto dto, int userId)
-    {
-        
-        PlaylistSongs ps = _context.PlaylistSongs
-                                    .FirstOrDefault(ps => ps.PlaylistId == dto.PlaylistId && ps.SongId == dto.SongId);
-
-        if (ps == null)
-            throw new Exception("Entity Does Not Exist");
-
-        if (!CheckIfUserOwnsPlaylist(ps.PlaylistId, userId))
-            throw new Exception("User does not own this playlist!");
-
-        int maxPos = _context.PlaylistSongs
-                                .Where(ps => ps.PlaylistId == dto.PlaylistId && ps.SongId == dto.SongId)
-                                .Max(ps => ps.Position);
-
-        int newPos = Math.Clamp(dto.Position, 1, maxPos);
-
-        int oldPos = ps.Position;
-
-        if (newPos == ps.Position)
-            return;
-
-        if (newPos < oldPos)
-        {
-            _context.PlaylistSongs
-                    .Where(ps => ps.PlaylistId == dto.PlaylistId &&
-                                 ps.SongId == dto.SongId &&
-                                 ps.Position >= newPos && ps.Position < oldPos)
-                    .ExecuteUpdate(ps => ps.SetProperty(p => p.Position, p => p.Position + 1));
-        }
-        else
-        {
-            
-            _context.PlaylistSongs
-                    .Where(ps => ps.PlaylistId == dto.PlaylistId &&
-                                 ps.SongId == dto.SongId &&
-                                 ps.Position > oldPos && ps.Position <= newPos)
-                    .ExecuteUpdate(ps => ps.SetProperty(p => p.Position, p => p.Position - 1));
-
-        }
-
-        ps.Position = newPos;
         _context.SaveChanges();
 
     }
@@ -156,14 +100,7 @@ public class PlaylistSongsService
         if (!CheckIfUserOwnsPlaylist(entity.PlaylistId, userId))
             throw new Exception("User does not own this playlist");
 
-        int removedPos = entity.Position;
-
         _context.PlaylistSongs.Remove(entity);
-
-        _context.PlaylistSongs.Where(ps => ps.PlaylistId == entity.PlaylistId &&
-                                           ps.SongId == entity.SongId &&
-                                           ps.Position < removedPos)
-                              .ExecuteUpdate(ps => ps.SetProperty(p => p.Position, p => p.Position - 1));
 
         _context.SaveChanges();
 

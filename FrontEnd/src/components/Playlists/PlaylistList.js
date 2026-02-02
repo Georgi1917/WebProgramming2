@@ -23,9 +23,15 @@ function PlaylistList({ playlists, onEdit, onDelete }) {
               <td>{playlist.id}</td>
               <td>{playlist.title}</td>
               <td>
-                <Link to={`/playlists/${playlist.id}`} className="btn-view">View Songs</Link>
-                <button onClick={() => onEdit(playlist)} className="btn-edit">Edit</button>
-                <button onClick={() => onDelete(playlist.id)} className="btn-delete">Delete</button>
+                <div className="actions-container">
+                  <Link to={`/playlists/${playlist.id}`} className="btn-view-songs">
+                    🎵 View Songs
+                  </Link>
+                  <div className="actions-right">
+                    <button onClick={() => onEdit(playlist)} className="btn-edit">Edit</button>
+                    <button onClick={() => onDelete(playlist.id)} className="btn-delete">Delete</button>
+                  </div>
+                </div>
               </td>
             </tr>
           ))}

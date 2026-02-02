@@ -11,5 +11,6 @@ public class User : BaseEntity
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
     public List<Playlist> Playlists { get; set; }
+    public List<UserLikedSongs> LikedSongs { get; set; }
 
 }

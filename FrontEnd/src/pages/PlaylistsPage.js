@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PlaylistList from '../components/Playlists/PlaylistList';
 import PlaylistForm from '../components/Playlists/PlaylistForm';
@@ -80,7 +81,10 @@ function PlaylistsPage() {
     <div className="crud-page">
       <div className="page-header">
         <h1>📝 Playlists</h1>
-        <button onClick={handleAdd} className="btn-primary">+ Add Playlist</button>
+        <div className="header-actions">
+          <Link to="/liked-songs" className="btn-primary">❤️ Liked Songs</Link>
+          <button onClick={handleAdd} className="btn-primary">+ Add Playlist</button>
+        </div>
       </div>
 
       {showForm && (

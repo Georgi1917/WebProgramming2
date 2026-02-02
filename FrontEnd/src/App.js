@@ -10,6 +10,7 @@ import ArtistsPage from './pages/ArtistsPage';
 import ArtistDetailsPage from './pages/ArtistDetailsPage';
 import AlbumDetailsPage from './pages/AlbumDetailsPage';
 import PlaylistDetailsPage from './pages/PlaylistDetailsPage';
+import LikedSongsPage from './pages/LikedSongsPage';
 import UsersPage from './pages/UsersPage';
 import SongsPage from './pages/SongsPage';
 import './App.css';
@@ -25,6 +26,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/playlists" element={<PlaylistsPage />} />
             <Route path="/playlists/:id" element={<PlaylistDetailsPage />} />
+            <Route path="/liked-songs" element={<LikedSongsPage />} />
             <Route path="/artists" element={<ArtistsPage />} />
             <Route path="/artists/:id" element={<ArtistDetailsPage />} />
             <Route path="/albums/:id" element={<AlbumDetailsPage />} />
