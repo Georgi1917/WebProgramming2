@@ -8,7 +8,7 @@ import './CrudPage.css';
 
 function ArtistsPage() {
   const navigate = useNavigate();
-  const { requireLogin } = useAuth();
+  const { requireLogin, user } = useAuth();
   const [artists, setArtists] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -81,7 +81,9 @@ function ArtistsPage() {
     <div className="crud-page">
       <div className="page-header">
         <h1>🎤 Artists</h1>
-        <button onClick={handleAdd} className="btn-primary">+ Add Artist</button>
+        {user?.role === 'Admin' && (
+          <button onClick={handleAdd} className="btn-primary">+ Add Artist</button>
+        )}
       </div>
 
       {showForm && (
@@ -96,9 +98,10 @@ function ArtistsPage() {
       {loading ? <p>Loading...</p> : (
         <ArtistList
           artists={artists}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+          onEdit={user?.role === 'Admin' ? handleEdit : null}
+          onDelete={user?.role === 'Admin' ? handleDelete : null}
           onDetails={handleDetails}
+          isAdmin={user?.role === 'Admin'}
         />
       )}
     </div>

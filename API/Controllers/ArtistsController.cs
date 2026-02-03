@@ -1,6 +1,7 @@
 using Common.Entities;
 using Common.Infrastructure.ArtistDTOs;
 using Common.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ArtistsController : ControllerBase
     {
         
@@ -21,6 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get()
         {
             
@@ -30,6 +33,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [AllowAnonymous]
         public IActionResult Get([FromRoute]int id)
         {
             
@@ -38,6 +42,7 @@ namespace API.Controllers
 
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Post([FromBody] ArtistCreateDto item)
         {
             
@@ -48,6 +53,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Put([FromRoute]int id, [FromBody] ArtistCreateDto item)
         {
             
@@ -61,6 +67,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete([FromRoute]int id)
         {
 

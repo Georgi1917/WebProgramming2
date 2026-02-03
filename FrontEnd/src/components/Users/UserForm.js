@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import '../Playlists/CrudForm.css';
 
 function UserForm({ initialData, onSubmit, onCancel, isEditing }) {
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState(() => {
+    const init = { role: 'User', ...(initialData || {}) };
+    if (init.role == null) init.role = 'User';
+    return init;
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +43,18 @@ function UserForm({ initialData, onSubmit, onCancel, isEditing }) {
             onChange={handleChange}
             required
           />
+        </div>
+
+        <div className="form-group">
+          <label>Role</label>
+          <select
+            name="role"
+            value={formData.role || 'User'}
+            onChange={handleChange}
+          >
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+          </select>
         </div>
 
         {!isEditing && (

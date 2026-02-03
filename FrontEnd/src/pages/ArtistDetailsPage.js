@@ -10,7 +10,7 @@ import './ArtistDetailsPage.css';
 function ArtistDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { requireLogin } = useAuth();
+  const { requireLogin, user } = useAuth();
   const [artist, setArtist] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -127,7 +127,9 @@ function ArtistDetailsPage() {
       <div className="albums-section">
         <div className="albums-header">
           <h2>Albums</h2>
-          <button onClick={handleCreateAlbum} className="btn-primary">+ Add Album</button>
+          {user?.role === 'Admin' && (
+            <button onClick={handleCreateAlbum} className="btn-primary">+ Add Album</button>
+          )}
         </div>
         
         {showForm && (
@@ -161,8 +163,8 @@ function ArtistDetailsPage() {
                     <td>{new Date(album.releaseDate).toLocaleDateString()}</td>
                     <td>
                       <button onClick={() => navigate(`/albums/${album.id}`)} className="btn-details">Songs</button>
-                      <button onClick={() => handleEditAlbum(album)} className="btn-edit">Edit</button>
-                      <button onClick={() => handleDeleteAlbum(album.id)} className="btn-delete">Delete</button>
+                      {user?.role === 'Admin' && <button onClick={() => handleEditAlbum(album)} className="btn-edit">Edit</button>}
+                      {user?.role === 'Admin' && <button onClick={() => handleDeleteAlbum(album.id)} className="btn-delete">Delete</button>}
                     </td>
                   </tr>
                 ))}

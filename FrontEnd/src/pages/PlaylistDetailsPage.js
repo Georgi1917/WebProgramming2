@@ -15,11 +15,29 @@ function PlaylistDetailsPage() {
   const [currentSongId, setCurrentSongId] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [genreMap, setGenreMap] = useState({});
 
   useEffect(() => {
     fetchSongs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await (await import('../services/genreService')).default.getAll();
+        const raw = res.data || [];
+        const normalized = raw.map(g => ({ id: g.id ?? g.Id ?? g.ID, name: g.name ?? g.Name }));
+        const map = {};
+        normalized.forEach(g => { if (g.id != null) map[g.id] = g.name; });
+        if (mounted) setGenreMap(map);
+      } catch (e) {
+        console.error('Failed to load genres for playlist page', e);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const fetchSongs = async () => {
     if (!requireLogin(() => fetchSongs())) return;
@@ -112,6 +130,7 @@ function PlaylistDetailsPage() {
                 <tr>
                   <th>Song ID</th>
                   <th>Title</th>
+                  <th>Genre</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -120,6 +139,7 @@ function PlaylistDetailsPage() {
                   <tr key={ps.song?.id || `song-${index}`}>
                     <td>{ps.song?.id}</td>
                     <td>{ps.song?.title}</td>
+                    <td>{ps.song?.genre?.name || ps.song?.genre?.Name || ps.song?.genreName || (ps.song?.genreId ? genreMap[ps.song.genreId] : null) || ps.song?.genreId || 'N/A'}</td>
                     <td>
                       <button onClick={() => togglePlay(ps.song)} className="btn-play">
                         {currentSongId === ps.song?.id && isPlaying ? '⏸ Pause' : '▶ Play'}

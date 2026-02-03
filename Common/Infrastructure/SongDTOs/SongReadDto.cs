@@ -14,6 +14,7 @@ public class SongReadDto
     public string ContentType { get; set; }
     public long Size { get; set; }
 
+    public int GenreId { get; set; }
     public int AlbumId { get; set; }
 
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Services;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+            RoleClaimType = ClaimTypes.Role
         };
     });
 
@@ -47,13 +49,14 @@ builder.Services.AddScoped<AlbumService>();
 builder.Services.AddScoped<SongService>();
 builder.Services.AddScoped<PlaylistSongsService>();
 builder.Services.AddScoped<UserLikedSongsService>();
+builder.Services.AddScoped<GenreService>();
 builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.MapControllers();
 

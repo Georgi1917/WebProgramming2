@@ -59,6 +59,7 @@ public class PlaylistSongsService
                 FileName = ps.Song.FileName,
                 ContentType = ps.Song.ContentType,
                 Size = ps.Song.Size,
+                GenreId = ps.Song.GenreId,
                 AlbumId = ps.Song.AlbumId
             }
         }).ToList();    

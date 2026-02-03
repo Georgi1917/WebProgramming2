@@ -41,6 +41,7 @@ public class UserLikedSongsService
                 FileName = e.Song.FileName,
                 ContentType = e.Song.ContentType,
                 Size = e.Song.Size,
+                GenreId = e.Song.GenreId,
                 AlbumId = e.Song.AlbumId
             }
         }).ToList();

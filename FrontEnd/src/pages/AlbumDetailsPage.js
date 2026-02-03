@@ -28,12 +28,26 @@ function AlbumDetailsPage() {
   const audioRef = useRef(null);
   const [currentSongId, setCurrentSongId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [genreMap, setGenreMap] = useState({});
 
   useEffect(() => {
     fetchAlbumAndSongs();
     if (isAuthenticated && user?.id) {
       fetchLikedSongs();
     }
+    // fetch genres for display
+    (async () => {
+      try {
+        const res = await (await import('../services/genreService')).default.getAll();
+        const raw = res.data || [];
+        const normalized = raw.map(g => ({ id: g.id ?? g.Id ?? g.ID, name: g.name ?? g.Name }));
+        const map = {};
+        normalized.forEach(g => { if (g.id != null) map[g.id] = g.name; });
+        setGenreMap(map);
+      } catch (e) {
+        console.error('Failed to load genres', e);
+      }
+    })();
   }, [id, isAuthenticated, user?.id]);
 
   const fetchAlbumAndSongs = async () => {
@@ -142,6 +156,7 @@ function AlbumDetailsPage() {
         fd.append('Title', formData.title);
         fd.append('DurationInSeconds', String(formData.durationInSeconds));
         fd.append('AlbumId', String(formData.albumId));
+        if (formData.genreId) fd.append('GenreId', String(formData.genreId));
         await songService.create(fd);
       }
       setShowForm(false);
@@ -221,7 +236,9 @@ function AlbumDetailsPage() {
       <div className="albums-section">
         <div className="albums-header">
           <h2>Songs</h2>
-          <button onClick={handleCreateSong} className="btn-primary">+ Add Song</button>
+          {user?.role === 'Admin' && (
+            <button onClick={handleCreateSong} className="btn-primary">+ Add Song</button>
+          )}
         </div>
 
         {showForm && (
@@ -253,7 +270,7 @@ function AlbumDetailsPage() {
                 <tr>
                   <th>ID</th>
                   <th>Title</th>
-                  <th>Duration</th>
+                  <th>Genre</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -262,7 +279,7 @@ function AlbumDetailsPage() {
                   <tr key={song.id}>
                     <td>{song.id}</td>
                     <td>{song.title}</td>
-                    <td>{song.durationInSeconds ? `${Math.floor(song.durationInSeconds/60)}:${String(song.durationInSeconds%60).padStart(2,'0')}` : 'N/A'}</td>
+                    <td>{song.genre?.name || song.genre?.Name || song.genreName || (song.genreId ? genreMap[song.genreId] : null) || song.genreId || 'N/A'}</td>
                     <td>
                       <button onClick={() => togglePlay(song)} className="btn-details">{currentSongId === song.id && isPlaying ? 'Pause' : 'Play'}</button>
                       <button onClick={() => handleOpenPlaylistSelector(song.id)} className="btn-add-playlist" title="Add to Playlist">➕</button>
@@ -273,8 +290,8 @@ function AlbumDetailsPage() {
                       >
                         {likedSongIds.includes(song.id) ? '❤️' : '🤍'}
                       </button>
-                      <button onClick={() => handleEditSong(song)} className="btn-edit">Edit</button>
-                      <button onClick={() => handleDeleteSong(song.id)} className="btn-delete">Delete</button>
+                      {user?.role === 'Admin' && <button onClick={() => handleEditSong(song)} className="btn-edit">Edit</button>}
+                      {user?.role === 'Admin' && <button onClick={() => handleDeleteSong(song.id)} className="btn-delete">Delete</button>}
                     </td>
                   </tr>
                 ))}

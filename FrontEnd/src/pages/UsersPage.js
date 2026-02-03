@@ -6,7 +6,7 @@ import userService from '../services/userService';
 import './CrudPage.css';
 
 function UsersPage() {
-  const { requireLogin } = useAuth();
+  const { requireLogin, user } = useAuth();
   const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -32,7 +32,7 @@ function UsersPage() {
     if (!requireLogin(() => handleAdd())) return;
     
     setEditingId(null);
-    setFormData({ username: '', email: '', password: '' });
+    setFormData({ username: '', email: '', password: '', role: 'User' });
     setShowForm(true);
   };
 
@@ -40,7 +40,7 @@ function UsersPage() {
     if (!requireLogin(() => handleEdit(user))) return;
     
     setEditingId(user.id);
-    setFormData({ username: user.username, email: user.email });
+    setFormData({ username: user.username, email: user.email, role: user.role });
     setShowForm(true);
   };
   
@@ -77,7 +77,9 @@ function UsersPage() {
     <div className="crud-page">
       <div className="page-header">
         <h1>👥 Users</h1>
-        <button onClick={handleAdd} className="btn-primary">+ Add User</button>
+        {user?.role === 'Admin' && (
+          <button onClick={handleAdd} className="btn-primary">+ Add User</button>
+        )}
       </div>
 
       {showForm && (
@@ -92,8 +94,9 @@ function UsersPage() {
       {loading ? <p>Loading...</p> : (
         <UserList
           users={users}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+          onEdit={user?.role === 'Admin' ? handleEdit : null}
+          onDelete={user?.role === 'Admin' ? handleDelete : null}
+          isAdmin={user?.role === 'Admin'}
         />
       )}
     </div>

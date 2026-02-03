@@ -42,7 +42,8 @@ public class UserServices
                         {
                             Id = e.Id,
                             Username = e.Username,
-                            Email = e.Email
+                            Email = e.Email,
+                            Role = e.Role
                         })
                         .ToList();
 
@@ -56,7 +57,8 @@ public class UserServices
                         {
                             Id = e.Id,
                             Username = e.Username,
-                            Email = e.Email
+                            Email = e.Email,
+                            Role = e.Role
                         })
                         .FirstOrDefault(u => u.Id == id);
 
@@ -79,6 +81,26 @@ public class UserServices
         {
             Username = dto.Username,
             Email = dto.Email,
+            Role = "User",
+            PasswordHash = hash,
+            PasswordSalt = salt
+        };
+
+        _context.Users.Add(user);
+        _context.SaveChanges();
+
+    }
+
+    public void Save(UserCreateDto dto)
+    {
+
+        CreatePasswordHash(dto.Password, out var hash, out var salt);
+
+        User user = new User
+        {
+            Username = dto.Username,
+            Email = dto.Email,
+            Role = dto.Role,
             PasswordHash = hash,
             PasswordSalt = salt
         };
@@ -97,6 +119,7 @@ public class UserServices
 
         forUpdate.Username = item.Username;
         forUpdate.Email    = item.Email;
+        forUpdate.Role     = item.Role;
 
         _context.SaveChanges();
 

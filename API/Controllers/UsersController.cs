@@ -4,11 +4,14 @@ using Common.Entities;
 using Common.Services;
 using Common.Infrastructure.UserDTOs;
 using Common.Infrastructure.AuthDTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         
@@ -22,6 +25,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get()
         {
             
@@ -31,6 +35,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get([FromRoute]int id)
         {
             
@@ -39,16 +44,18 @@ namespace API.Controllers
 
         }
         [HttpPost]
-        public IActionResult Post([FromBody] RegisterDto user)
+        [Authorize(Roles = "Admin")]
+        public IActionResult Post([FromBody] UserCreateDto dto)
         {
             
-            _services.Save(user);
-            return Ok(user);
+            _services.Save(dto);
+            return Ok(dto);
 
         }
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Put([FromRoute]int id, [FromBody] UserUpdateDto user)
         {
             
@@ -60,6 +67,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete([FromRoute]int id)
         {
 

@@ -106,7 +106,6 @@ function LikedSongsPage() {
                   <tr>
                     <th>Song ID</th>
                     <th>Title</th>
-                    <th>Duration</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -115,8 +114,7 @@ function LikedSongsPage() {
                     <tr key={uls.song?.id || `liked-${index}`}>
                       <td>{uls.song?.id}</td>
                       <td>{uls.song?.title}</td>
-                      <td>{uls.song?.durationInSeconds ? `${Math.floor(uls.song.durationInSeconds/60)}:${String(uls.song.durationInSeconds%60).padStart(2,'0')}` : 'N/A'}</td>
-                      <td>
+                        <td>
                         <button onClick={() => togglePlay(uls.song)} className="btn-details">
                           {currentSongId === uls.song?.id && isPlaying ? '⏸ Pause' : '▶ Play'}
                         </button>

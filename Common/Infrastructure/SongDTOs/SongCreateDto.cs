@@ -7,6 +7,7 @@ public class SongCreateDto
 
     public string Title { get; set; }
     public int DurationInSeconds { get; set; }
+    public int GenreId { get; set; }
     public int AlbumId { get; set; }
 
 }

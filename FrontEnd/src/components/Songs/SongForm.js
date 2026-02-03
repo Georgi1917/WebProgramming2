@@ -1,25 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import './SongForm.css';
+import genreService from '../../services/genreService';
 
 function SongForm({ initialData, albumId, onSubmit, onCancel, isEditing }) {
   const [formData, setFormData] = useState({
     title: '',
     durationInSeconds: '',
-    albumId: albumId
+    albumId: albumId,
+    genreId: null
   });
   const [file, setFile] = useState(null);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         title: initialData.title || '',
         durationInSeconds: initialData.durationInSeconds || '',
-        albumId: initialData.albumId || albumId
+        albumId: initialData.albumId || albumId,
+        genreId: initialData.genreId || (initialData.genre ? initialData.genre.id : null)
       });
     } else {
-      setFormData({ title: '', durationInSeconds: '', albumId: albumId });
+      setFormData({ title: '', durationInSeconds: '', albumId: albumId, genreId: null });
     }
   }, [initialData, albumId]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const res = await genreService.getAll();
+        const raw = res.data || [];
+        const normalized = raw.map(g => ({ id: g.id ?? g.Id ?? g.ID, name: g.name ?? g.Name }));
+        setGenres(normalized);
+      } catch (err) {
+        console.error('Failed to fetch genres', err);
+      }
+    };
+    fetchGenres();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +53,8 @@ function SongForm({ initialData, albumId, onSubmit, onCancel, isEditing }) {
     const payload = {
       title: formData.title,
       durationInSeconds: parseInt(formData.durationInSeconds, 10),
-      albumId: formData.albumId
+      albumId: formData.albumId,
+      genreId: formData.genreId ? parseInt(formData.genreId, 10) : null
     };
     onSubmit(payload, file);
   };
@@ -52,6 +71,15 @@ function SongForm({ initialData, albumId, onSubmit, onCancel, isEditing }) {
           <div className="form-group">
             <label htmlFor="durationInSeconds">Duration (seconds)</label>
             <input id="durationInSeconds" name="durationInSeconds" type="number" min="0" value={formData.durationInSeconds} onChange={handleChange} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="genreId">Genre</label>
+            <select id="genreId" name="genreId" value={formData.genreId || ''} onChange={handleChange}>
+              <option value="">-- Select Genre --</option>
+              {genres.map(g => (
+                <option key={g.id} value={g.id}>{g.name}</option>
+              ))}
+            </select>
           </div>
           {!isEditing && (
             <div className="form-group">

@@ -1,5 +1,4 @@
-using Common.Data;
-using Common.Infrastructure.AlbumDTOs;
+using Common.Infrastructure.GenreDTOs;
 using Common.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,16 +9,14 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AlbumsController : ControllerBase
+    public class GenresController : ControllerBase
     {
         
-        private readonly AlbumService _service;
+        private readonly GenreService _service;
 
-        public AlbumsController(AlbumService service)
+        public GenresController(GenreService service)
         {
-            
             _service = service;
-
         }
 
         [HttpGet]
@@ -27,23 +24,23 @@ namespace API.Controllers
         public IActionResult Get()
         {
             
-            return Ok(_service.GetAll());
+            return Ok(_service.Get());
 
         }
 
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
-        public IActionResult GetById([FromRoute]int id)
+        public IActionResult Get([FromRoute] int id)
         {
             
-            return Ok(_service.Get(id));
+            return Ok(_service.GetById(id));
 
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Post([FromBody]AlbumCreateDto dto)
+        public IActionResult Post([FromBody] GenreBaseDto dto)
         {
             
             _service.Save(dto);
@@ -55,10 +52,12 @@ namespace API.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult Put([FromRoute]int id, [FromBody]AlbumCreateDto dto)
+        public IActionResult Put([FromRoute] int id, [FromBody] GenreBaseDto dto)
         {
             
-            _service.Update(id, dto);
+            bool updated = _service.Update(id, dto);
+
+            if (!updated) return NotFound();
 
             return Ok(dto);
 
@@ -67,13 +66,12 @@ namespace API.Controllers
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult Delete([FromRoute]int id)
+        public IActionResult Delete([FromRoute] int id)
         {
             
-            AlbumReadDto forDelete = _service.Get(id);
             _service.Delete(id);
 
-            return Ok(forDelete);
+            return Ok();
 
         }
 

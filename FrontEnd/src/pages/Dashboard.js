@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 function Dashboard() {
+  const { user } = useAuth();
   return (
     <div className="dashboard">
       <h1>Welcome to Playlist Dashboard</h1>
@@ -19,12 +21,14 @@ function Dashboard() {
             <p>Browse and manage artists</p>
           </div>
         </Link>
-        <Link to="/users" className="stat-card-link">
-          <div className="stat-card">
-            <h2>👥 Users</h2>
-            <p>Manage user accounts</p>
-          </div>
-        </Link>
+        {user?.role === 'Admin' && (
+          <Link to="/users" className="stat-card-link">
+            <div className="stat-card">
+              <h2>👥 Users</h2>
+              <p>Manage user accounts</p>
+            </div>
+          </Link>
+        )}
         <Link to="/songs" className="stat-card-link">
           <div className="stat-card">
             <h2>🎵 Songs</h2>

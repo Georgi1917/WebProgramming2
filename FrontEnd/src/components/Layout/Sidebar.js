@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
 
 function Sidebar() {
+  const { user } = useAuth();
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
@@ -18,9 +20,11 @@ function Sidebar() {
         <Link to="/songs" className="nav-item">
           🎵 Songs
         </Link>
-        <Link to="/users" className="nav-item">
-          👥 Users
-        </Link>
+        {user?.role === 'Admin' && (
+          <Link to="/users" className="nav-item">
+            👥 Users
+          </Link>
+        )}
       </nav>
     </aside>
   );

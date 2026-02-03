@@ -14,6 +14,8 @@ public class Song : BaseEntity
     public long Size { get; set; }
     public int AlbumId { get; set; }
     public Album Album { get; set; }
+    public int GenreId { get; set; }
+    public Genre Genre { get; set; }
 
     public List<PlaylistSongs> PlaylistSongs { get; set; }
     public List<UserLikedSongs> LikedByUsers { get; set; }

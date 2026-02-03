@@ -23,6 +23,8 @@ function SongsPage() {
   const [showPlaylistSelector, setShowPlaylistSelector] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState(null);
 
+  // debug logging removed
+
   useEffect(() => {
     fetchSongs();
     if (isAuthenticated && user?.id) {
@@ -59,7 +61,7 @@ function SongsPage() {
     if (!requireLogin(() => handleAdd())) return;
     
     setEditingId(null);
-    setFormData({ title: '', durationInSeconds: 0, albumId: 0 });
+    setFormData({ title: '', durationInSeconds: 0, albumId: 0, genreId: null });
     setShowForm(true);
   };
 
@@ -70,7 +72,8 @@ function SongsPage() {
     setFormData({ 
       title: song.title, 
       durationInSeconds: song.durationInSeconds,
-      albumId: song.albumId
+      albumId: song.albumId,
+      genreId: song.genreId || (song.genre ? song.genre.id : null)
     });
     setShowForm(true);
   };
@@ -110,6 +113,7 @@ function SongsPage() {
         formDataToSend.append('title', data.title);
         formDataToSend.append('durationInSeconds', data.durationInSeconds);
         formDataToSend.append('albumId', data.albumId);
+        if (data.genreId) formDataToSend.append('genreId', data.genreId);
         
         await songService.create(formDataToSend);
       }
@@ -194,6 +198,9 @@ function SongsPage() {
     <div className="crud-page">
       <div className="page-header">
         <h1>🎵 Songs</h1>
+        {user?.role === 'Admin' && (
+          <button onClick={handleAdd} className="btn-primary">+ Add Song</button>
+        )}
       </div>
 
       {showForm && (
@@ -218,8 +225,8 @@ function SongsPage() {
           )}
           <SongList
             songs={songs}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
+            onEdit={user?.role === 'Admin' ? handleEdit : null}
+            onDelete={user?.role === 'Admin' ? handleDelete : null}
             onPlay={togglePlay}
             onAddToPlaylist={(songId) => handleOpenPlaylistSelector(songId)}
             onLike={handleLike}
@@ -227,6 +234,7 @@ function SongsPage() {
             likedSongIds={likedSongIds}
             currentSongId={currentSongId}
             isPlaying={isPlaying}
+            isAdmin={user?.role === 'Admin'}
           />
         </>
       )}

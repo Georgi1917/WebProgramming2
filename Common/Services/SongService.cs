@@ -31,6 +31,7 @@ public class SongService
                             FileName = e.FileName,
                             ContentType = e.ContentType,
                             Size = e.Size,
+                            GenreId = e.GenreId,
                             AlbumId = e.AlbumId
                         }).ToList();
 
@@ -50,6 +51,7 @@ public class SongService
                             FileName = e.FileName,
                             ContentType = e.ContentType,
                             Size = e.Size,
+                            GenreId = e.GenreId,
                             AlbumId = e.AlbumId
                         }).FirstOrDefault(e => e.Id == id);
 
@@ -72,6 +74,7 @@ public class SongService
 
         needed.Title = dto.Title;
         needed.DurationInSeconds = dto.DurationInSeconds;
+        needed.GenreId = dto.GenreId;
 
         _context.SaveChanges();
 

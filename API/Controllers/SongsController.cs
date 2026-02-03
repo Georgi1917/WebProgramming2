@@ -6,11 +6,13 @@ using Common.Infrastructure.SongDTOs;
 using Common.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SongsController : ControllerBase
     {
         
@@ -27,6 +29,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get()
         {
             
@@ -36,6 +39,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [AllowAnonymous]
         public IActionResult Get([FromRoute]int id)
         {
             
@@ -45,6 +49,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("stream/{id}")]
+        [AllowAnonymous]
         public IActionResult Stream([FromRoute]int id)
         {
             
@@ -59,6 +64,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post(IFormFile file, [FromForm] SongCreateDto dto)
         {
             
@@ -83,6 +89,7 @@ namespace API.Controllers
                 Title = dto.Title,
                 DurationInSeconds = dto.DurationInSeconds,
                 AlbumId = dto.AlbumId,
+                GenreId = dto.GenreId,
                 FilePath = filePath,
                 FileName = file.FileName,
                 ContentType = file.ContentType,
@@ -97,6 +104,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Put([FromRoute]int id, [FromBody]SongUpdateDto dto)
         {
             
@@ -108,6 +116,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete([FromRoute]int id)
         {
             
