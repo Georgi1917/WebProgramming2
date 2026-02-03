@@ -148,9 +148,17 @@ function AlbumDetailsPage() {
   const handleSubmitSong = async (formData, file) => {
     try {
       if (editingSong) {
+        // Update on server
         await songService.update(editingSong.id, formData);
+        // Update local state to reflect changes immediately without refetching
+        setSongs(songs.map(s => 
+          s.id === editingSong.id 
+            ? { ...s, ...formData }
+            : s
+        ));
+        setShowForm(false);
       } else {
-        // create with multipart form data
+        // For creation, refetch to get the new song
         const fd = new FormData();
         if (file) fd.append('file', file);
         fd.append('Title', formData.title);
@@ -158,9 +166,9 @@ function AlbumDetailsPage() {
         fd.append('AlbumId', String(formData.albumId));
         if (formData.genreId) fd.append('GenreId', String(formData.genreId));
         await songService.create(fd);
+        await fetchAlbumAndSongs();
+        setShowForm(false);
       }
-      setShowForm(false);
-      await fetchAlbumAndSongs();
     } catch (err) {
       console.error('Failed to save song', err);
       alert('Failed to save song');

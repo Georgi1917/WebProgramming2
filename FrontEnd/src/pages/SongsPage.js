@@ -198,9 +198,6 @@ function SongsPage() {
     <div className="crud-page">
       <div className="page-header">
         <h1>🎵 Songs</h1>
-        {user?.role === 'Admin' && (
-          <button onClick={handleAdd} className="btn-primary">+ Add Song</button>
-        )}
       </div>
 
       {showForm && (

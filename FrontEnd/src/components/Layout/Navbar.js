@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 function Navbar() {
   const { user, isAuthenticated, logout, setShowLoginModal, setShowRegisterModal } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <nav className="navbar">
@@ -18,7 +19,7 @@ function Navbar() {
         {isAuthenticated ? (
           <div className="user-info">
             <span className="username">👤 {user?.username}</span>
-            <button onClick={logout} className="btn-logout">Logout</button>
+            <button onClick={() => { logout(); navigate('/'); }} className="btn-logout">Logout</button>
           </div>
         ) : (
           <div className="auth-buttons">
